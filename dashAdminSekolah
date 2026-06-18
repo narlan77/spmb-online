@@ -1,0 +1,606 @@
+<div id="page-dash-adminsekolah" class="page-content d-none">
+  
+  <div class="row g-3 mb-4">
+    <div class="col-12">
+      <div class="card border-0 shadow-sm rounded-4 bg-primary text-white">
+        <div class="card-body p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+          <div>
+            <span class="badge bg-white text-primary mb-2 px-3 py-1 rounded-pill text-xs fw-bold tracking-widest text-uppercase">Operator Panel</span>
+            <h4 class="fw-bold mb-1" id="admNamaDisplay">Memuat Nama Operator...</h4>
+            <p class="mb-0 opacity-75 small" id="admRoleDisplay">
+              <i class="bi bi-building-fill me-1"></i> Database Instansi: Memuat...
+            </p>
+          </div>
+          <div class="d-flex flex-wrap gap-2">
+            <button class="btn btn-outline-light btn-sm rounded-pill px-3 fw-semibold" data-bs-toggle="modal" data-bs-target="#modalGantiPasswordAdmin">
+              <i class="bi bi-key-fill me-1"></i> Ganti Password
+            </button>
+            <button class="btn btn-light btn-sm text-primary rounded-pill px-3 fw-bold shadow-sm" onclick="muatTabelPendaftarSiswaCabang(this)">
+              <i class="bi bi-arrow-clockwise"></i> Segarkan Data Pendaftar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-12 col-md-6">
+      <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+        <h6 class="fw-bold text-dark mb-3"><i class="bi bi-sliders me-2 text-primary"></i>Pengaturan Kuota Instansi</h6>
+        <div class="row align-items-center g-3">
+          <div class="col-sm-6">
+            <label for="inpKuotaSekolah" class="form-label small fw-semibold text-muted mb-1">Target Kuota Siswa</label>
+            <div class="input-group input-group-sm">
+              <input type="number" class="form-control rounded-3 text-center fw-bold" id="inpKuotaSekolah" value="100" min="0" oninput="hitungSisaKuotaOtomatis()">
+              <button class="btn btn-primary rounded-3 px-3 fw-bold" type="button" id="btnSimpanKuota" onclick="simpanKuotaKeDatabase(this)">
+                Simpan
+              </button>
+            </div>
+          </div>
+          <div class="col-sm-6 text-center text-sm-end border-start">
+            <small class="text-muted fw-bold text-uppercase d-block mb-1" style="font-size: 0.75rem; letter-spacing: 0.5px;">Sisa Kuota Saat Ini</small>
+            <h2 class="fw-extrabold text-success mb-0" id="admStatSisaKuota">0</h2>
+            <small class="text-muted text-xs" id="lblKeteranganKuota">Menghitung daya tampung...</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6">
+      <div class="row g-2 h-100">
+        <div class="col-6">
+          <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 position-relative overflow-hidden">
+            <small class="text-muted fw-bold text-uppercase d-block mb-1" style="font-size: 0.7rem; letter-spacing: 0.5px;">Total Pendaftar</small>
+            <h4 class="fw-bold text-dark mb-0" id="admStatTotal">0</h4>
+            <div class="position-absolute end-0 bottom-0 opacity-10 me-2 mb-1" style="font-size: 2rem; color: #0d6efd;"><i class="bi bi-people-fill"></i></div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 position-relative overflow-hidden">
+            <small class="text-muted fw-bold text-uppercase d-block mb-1" style="font-size: 0.7rem; letter-spacing: 0.5px;">Proses Seleksi</small>
+            <h4 class="fw-bold text-warning mb-0" id="admStatPending">0</h4>
+            <div class="position-absolute end-0 bottom-0 opacity-10 me-2 mb-1" style="font-size: 2rem; color: #ffc107;"><i class="bi bi-hourglass-split"></i></div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 position-relative overflow-hidden">
+            <small class="text-muted fw-bold text-uppercase d-block mb-1" style="font-size: 0.7rem; letter-spacing: 0.5px;">Diterima</small>
+            <h4 class="fw-bold text-success mb-0" id="admStatTerima">0</h4>
+            <div class="position-absolute end-0 bottom-0 opacity-10 me-2 mb-1" style="font-size: 2rem; color: #198754;"><i class="bi bi-check-circle-fill"></i></div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 position-relative overflow-hidden">
+            <small class="text-muted fw-bold text-uppercase d-block mb-1" style="font-size: 0.7rem; letter-spacing: 0.5px;">Ditolak</small>
+            <h4 class="fw-bold text-danger mb-0" id="admStatTolak">0</h4>
+            <div class="position-absolute end-0 bottom-0 opacity-10 me-2 mb-1" style="font-size: 2rem; color: #dc3545;"><i class="bi bi-x-circle-fill"></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card border-0 shadow-sm rounded-4 bg-white">
+    <div class="card-body p-4">
+      <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-3">
+        <div>
+          <h5 class="fw-bold text-dark mb-1">Database Pendaftar Cabang</h5>
+          <small class="text-muted">Gunakan lembar periksa untuk memvalidasi isian formulir siswa dan dokumen fisik pendukung.</small>
+        </div>
+        <div>
+          <button type="button" class="btn btn-success btn-sm rounded-3 px-3 shadow-sm fw-semibold" onclick="unduhDataPendaftarExcel()">
+            Unduh Data Excel
+          </button>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-hover align-middle border-0">
+          <thead class="table-light text-center small text-uppercase fw-bold text-muted border-bottom">
+            <tr>
+              <th style="width: 5%">No</th>
+              <th style="width: 12%">ID Daftar</th>
+              <th style="width: 25%">Nama Lengkap</th>
+              <th style="width: 12%">NISN</th>
+              <th style="width: 10%">Kelas</th>
+              <th style="width: 15%">Asal Sekolah</th>
+              <th style="width: 11%">Status</th>
+              <th style="width: 10%">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="bodiTabelPendaftarSiswa" class="small">
+            <tr>
+              <td colspan="8" class="text-center py-5 text-muted">
+                <div class="spinner-border text-primary spinner-border-sm me-2" role="status"></div>
+                Menunggu inisialisasi modul admin...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal fade" id="modalVerifikasiSiswa" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+    <div class="modal-content border-0 rounded-4 shadow-lg">
+      <div class="modal-header border-0 bg-light px-4 py-3">
+        <h5 class="modal-title fw-bold text-dark">
+          <i class="bi bi-person-vcard-fill text-primary me-2"></i>Lembar Verifikasi Operator Sekolah
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <div id="kontenModalVerifikasi"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalGantiPasswordAdmin" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 rounded-4 shadow-lg">
+      <div class="modal-header border-0 bg-light px-4 py-3">
+        <h5 class="modal-title fw-bold text-dark">
+          <i class="bi bi-shield-lock-fill text-primary me-2"></i>Ganti Password Operator
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="resetFormSandiAdmin()"></button>
+      </div>
+      <form id="formGantiSandiAdmin" onsubmit="simpanSandiBaruAdminServer(event)">
+        <div class="modal-body p-4">
+          
+          <div class="mb-3">
+            <label for="inpSandiLamaAdmin" class="form-label small fw-semibold text-dark">Password Saat Ini (Lama)</label>
+            <div class="input-group">
+              <input type="password" class="form-control" id="inpSandiLamaAdmin" placeholder="Masukkan password lama" required>
+              <button class="btn btn-outline-secondary px-3" type="button" onclick="toggleLihatPassword(event, 'inpSandiLamaAdmin', this)" style="font-size: 0.8rem; font-weight: bold; min-width: 65px;">Lihat</button>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="inpSandiBaruAdmin" class="form-label small fw-semibold text-dark">Password Baru</label>
+            <div class="input-group">
+              <input type="password" class="form-control" id="inpSandiBaruAdmin" placeholder="Minimal 6 karakter" minlength="6" required>
+              <button class="btn btn-outline-secondary px-3" type="button" onclick="toggleLihatPassword(event, 'inpSandiBaruAdmin', this)" style="font-size: 0.8rem; font-weight: bold; min-width: 65px;">Lihat</button>
+            </div>
+          </div>
+          
+          <div class="mb-1">
+            <label for="inpKonfSandiAdmin" class="form-label small fw-semibold text-dark">Konfirmasi Password Baru</label>
+            <div class="input-group">
+              <input type="password" class="form-control" id="inpKonfSandiAdmin" placeholder="Ulangi password baru" minlength="6" required>
+              <button class="btn btn-outline-secondary px-3" type="button" onclick="toggleLihatPassword(event, 'inpKonfSandiAdmin', this)" style="font-size: 0.8rem; font-weight: bold; min-width: 65px;">Lihat</button>
+            </div>
+          </div>
+          
+        </div>
+        <div class="modal-footer border-0 px-4 pb-4 pt-0">
+          <button type="button" class="btn btn-light rounded-3 px-3 small" data-bs-dismiss="modal" onclick="resetFormSandiAdmin()">Batal</button>
+          <button type="submit" id="btnSubmitSandiAdmin" class="btn btn-primary rounded-3 px-4 small shadow-sm">Update Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+var cachePendaftarSekolahMitra = [];
+
+function toggleLihatPassword(e, idInput, btn) {
+  if (e) e.preventDefault();
+  
+  var inputField = document.getElementById(idInput);
+  if (!inputField) return;
+
+  if (inputField.type === "password") {
+    inputField.type = "text";
+    btn.innerText = "Sembunyi";
+    btn.classList.replace("btn-outline-secondary", "btn-secondary");
+  } else {
+    inputField.type = "password";
+    btn.innerText = "Lihat";
+    btn.classList.replace("btn-secondary", "btn-outline-secondary");
+  }
+}
+
+function muatTabelPendaftarSiswaCabang(btn) {
+  var idSekolahAdmin = typeof admSchId !== 'undefined' ? admSchId : "";
+  if (!idSekolahAdmin) {
+    var sesi = localStorage.getItem("spmb_sesi_user");
+    if (sesi) idSekolahAdmin = JSON.parse(sesi).id_sekolah || "";
+  }
+  
+  if (!idSekolahAdmin) {
+    alert("Sesi Akses Sekolah Tidak Valid. Silakan keluar lalu masuk kembali.");
+    return;
+  }
+
+  var txtAsli = "";
+  if (btn && btn.innerHTML) { 
+    txtAsli = btn.innerHTML; 
+    btn.disabled = true; 
+    btn.innerHTML = "Sinkronisasi..."; 
+  }
+
+  var tbody = document.getElementById('bodiTabelPendaftarSiswa');
+  tbody.innerHTML = "<tr><td colspan='8' class='text-center py-5 text-muted'>Menghubungkan ke server Google Cloud Spreadsheet Cabang...</td></tr>";
+
+  google.script.run
+    .withSuccessHandler(function(res) {
+      if (btn) { btn.disabled = false; btn.innerHTML = txtAsli; }
+      
+      if (res && res.status === "success") {
+        cachePendaftarSekolahMitra = res.data;
+        
+        if (res.nama_sekolah) {
+          var elDisplay = document.getElementById('admRoleDisplay');
+          if (elDisplay) elDisplay.innerHTML = "Database Instansi: <strong>" + res.nama_sekolah + "</strong>";
+        }
+
+        document.getElementById('admStatTotal').innerText = res.statistik.total || 0;
+        document.getElementById('admStatPending').innerText = res.statistik.pending || 0;
+        document.getElementById('admStatTerima').innerText = res.statistik.diterima || 0;
+        document.getElementById('admStatTolak').innerText = res.statistik.ditolak || 0;
+        
+        if (res.kuota) {
+          document.getElementById('inpKuotaSekolah').value = res.kuota;
+        }
+        
+        renderTabelPendaftarAdmin(res.data);
+        hitungSisaKuotaOtomatis();
+      } else {
+        tbody.innerHTML = "<tr><td colspan='8' class='text-center text-danger small py-4'>Gagal mengambil data cabang: " + res.message + "</td></tr>";
+      }
+    })
+    .withFailureHandler(function(err) {
+      if (btn) { btn.disabled = false; btn.innerHTML = txtAsli; }
+      tbody.innerHTML = "<tr><td colspan='8' class='text-center text-danger small py-4'>Putus Jaringan: " + err.message + "</td></tr>";
+    })
+    .ambilPendaftarSekolah(idSekolahAdmin);
+}
+
+function renderTabelPendaftarAdmin(dataArray) {
+  var tbody = document.getElementById('bodiTabelPendaftarSiswa');
+  if (!dataArray || dataArray.length === 0) {
+    tbody.innerHTML = "<tr><td colspan='8' class='text-center py-5 text-muted font-monospace'>Belum ada data berkas calon siswa baru di database sekolah ini.</td></tr>";
+    return;
+  }
+  
+  var html = "";
+  for (var i = 0; i < dataArray.length; i++) {
+    var p = dataArray[i];
+    var badgeStyle = "bg-warning text-dark";
+    if (p.status.toLowerCase() === "diterima") badgeStyle = "bg-success text-white";
+    else if (p.status.toLowerCase() === "ditolak") badgeStyle = "bg-danger text-white";
+    
+    html += "<tr>" +
+        "<td class='text-center fw-bold text-secondary'>" + (i + 1) + "</td>" +
+        "<td class='text-center font-monospace fw-bold text-primary'>" + (p.id_pendaftar || "-") + "</td>" +
+        "<td class='fw-bold text-dark text-start'>" + (p.nama || "-") + "</td>" +
+        "<td class='text-center text-muted'>" + (p.nisn || "-") + "</td>" +
+        "<td class='text-center fw-semibold text-secondary'>Kelas " + (p.kelas_dimasuki || "-") + "</td>" +
+        "<td class='text-start'>" + (p.asal_sekolah || "-") + "</td>" +
+        "<td class='text-center'><span class='badge " + badgeStyle + " px-3 py-2 rounded-pill text-xs'>" + p.status + "</span></td>" +
+        "<td class='text-center'>" +
+          "<button type='button' class='btn btn-primary btn-sm rounded-3 shadow-sm px-3' onclick='bukaLembarVerifikasiSiswa(\"" + p.id_pendaftar + "\")'>Periksa</button>" +
+        "</td>" +
+      "</tr>";
+  }
+  tbody.innerHTML = html;
+}
+
+function hitungSisaKuotaOtomatis() {
+  var totalKuota = parseInt(document.getElementById('inpKuotaSekolah').value) || 0;
+  var siswaDiterima = parseInt(document.getElementById('admStatTerima').innerText) || 0;
+  var sisa = totalKuota - siswaDiterima;
+  
+  var h2Sisa = document.getElementById('admStatSisaKuota');
+  if (!h2Sisa) return;
+  h2Sisa.innerText = sisa;
+
+  if (sisa <= 0) {
+    h2Sisa.className = "fw-extrabold text-danger mb-0";
+    document.getElementById('lblKeteranganKuota').innerText = "Kuota Daya Tampung Penuh";
+  } else if (sisa <= 10) {
+    h2Sisa.className = "fw-extrabold text-warning mb-0";
+    document.getElementById('lblKeteranganKuota').innerText = "Sisa kuota menipis";
+  } else {
+    h2Sisa.className = "fw-extrabold text-success mb-0";
+    document.getElementById('lblKeteranganKuota').innerText = "Daya tampung aman";
+  }
+}
+
+function simpanKuotaKeDatabase(btn) {
+  var idSekolahAdmin = typeof admSchId !== 'undefined' ? admSchId : "";
+  if (!idSekolahAdmin) {
+    var sesi = localStorage.getItem("spmb_sesi_user");
+    if (sesi) idSekolahAdmin = JSON.parse(sesi).id_sekolah || "";
+  }
+  
+  var kuotaBaru = document.getElementById('inpKuotaSekolah').value;
+  var txtAsli = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = "...";
+
+  google.script.run
+    .withSuccessHandler(function(res) {
+      btn.disabled = false; btn.innerHTML = txtAsli;
+      if (res && res.status === "success") {
+        alert("Sukses memperbarui data target kuota instansi!");
+        hitungSisaKuotaOtomatis();
+      } else {
+        alert("Gagal simpan kuota: " + res.message);
+      }
+    })
+    .withFailureHandler(function(err) {
+      btn.disabled = false; btn.innerHTML = txtAsli;
+      alert("Putus Hubungan Jaringan: " + err.message);
+    })
+    .simpanKuotaSekolahServer(idSekolahAdmin, kuotaBaru);
+}
+
+function unduhDataPendaftarExcel() {
+  if (!cachePendaftarSekolahMitra || cachePendaftarSekolahMitra.length === 0) {
+    alert("Tidak ada data pendaftar yang dapat diekspor.");
+    return;
+  }
+
+  var idSekolahFile = typeof admSchId !== 'undefined' ? admSchId : "";
+  if (!idSekolahFile) {
+    var sesi = localStorage.getItem("spmb_sesi_user");
+    if (sesi) idSekolahFile = JSON.parse(sesi).id_sekolah || "Sekolah";
+    else idSekolahFile = "Sekolah";
+  }
+
+  var htmlExcel = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:x='urn:schemas-microsoft-com:office:excel' xmlns='http://www.w3.org/TR/REC-html40'>" +
+    "<head><meta charset='UTF-8'></head>" +
+    "<body>" +
+      "<h2>DAFTAR CALON SISWA BARU</h2>" +
+      "<table border='1'>" +
+        "<tr style='background-color: #198754; color: white; font-weight: bold; text-align: center;'>" +
+          "<th>No</th>" +
+          "<th>ID Pendaftar</th>" +
+          "<th>Nama Lengkap</th>" +
+          "<th>NISN</th>" +
+          "<th>NIK Siswa</th>" +
+          "<th>Kelas</th>" +
+          "<th>Asal Sekolah</th>" +
+          "<th>Nama Ayah</th>" +
+          "<th>Nama Ibu</th>" +
+          "<th>Kontak HP</th>" +
+          "<th>Status Berkas</th>" +
+        "</tr>";
+
+  for (var i = 0; i < cachePendaftarSekolahMitra.length; i++) {
+    var s = cachePendaftarSekolahMitra[i];
+    htmlExcel += "<tr>" +
+        "<td style='text-align: center;'>" + (i + 1) + "</td>" +
+        "<td style='text-align: center;'>" + (s.id_pendaftar || "") + "</td>" +
+        "<td>" + (s.nama || "") + "</td>" +
+        "<td style='text-align: center; mso-number-format:\"\\@\";'>" + (s.nisn || "") + "</td>" +
+        "<td style='text-align: center; mso-number-format:\"\\@\";'>" + (s.nik_siswa || "") + "</td>" +
+        "<td style='text-align: center;'>Kelas " + (s.kelas_dimasuki || "") + "</td>" +
+        "<td>" + (s.asal_sekolah || "") + "</td>" +
+        "<td>" + (s.nama_ayah || "") + "</td>" +
+        "<td>" + (s.nama_ibu || "") + "</td>" +
+        "<td style='text-align: center; mso-number-format:\"\\@\";'>" + (s.kontak || "") + "</td>" +
+        "<td style='text-align: center; font-weight: bold;'>" + (s.status || "") + "</td>" +
+      "</tr>";
+  }
+
+  htmlExcel += "</table></body></html>";
+
+  var blob = new Blob([htmlExcel], { type: "application/vnd.ms-excel" });
+  var urlStr = URL.createObjectURL(blob);
+  var dynamicLink = document.createElement("a");
+  var formatNamaFile = "SPMB_Rekap_" + idSekolahFile + "_" + new Date().toISOString().slice(0,10) + ".xls";
+  
+  dynamicLink.href = urlStr;
+  dynamicLink.download = formatNamaFile;
+  document.body.appendChild(dynamicLink);
+  dynamicLink.click();
+  document.body.removeChild(dynamicLink);
+}
+
+function bukaLembarVerifikasiSiswa(idTarget) {
+  var s = cachePendaftarSekolahMitra.find(function(item) { return item.id_pendaftar === idTarget; });
+  if (!s) return;
+  
+  // 1. Ambil URL mentah dari properti objek (toleransi huruf besar/kecil)
+  var fotoUrlRaw = s.link_foto || s.Link_Foto || "";
+  var fotoSiswaFix = "https://cdn-icons-png.flaticon.com/512/149/149071.png"; // Default siluet jika kosong
+
+  if (fotoUrlRaw && fotoUrlRaw !== "" && fotoUrlRaw !== "-") {
+    // 2. PROSES SINKRONISASI: Konversi otomatis jika link di spreadsheet berupa link Drive pratinjau
+    if (fotoUrlRaw.includes("drive.google.com")) {
+      var fileId = "";
+      if (fotoUrlRaw.includes("/d/")) {
+        fileId = fotoUrlRaw.split("/d/")[1].split("/")[0];
+      } else if (fotoUrlRaw.includes("id=")) {
+        fileId = fotoUrlRaw.split("id=")[1].split("&")[0];
+      }
+      
+      if (fileId !== "") {
+        fotoSiswaFix = "https://lh3.googleusercontent.com/d/" + fileId; 
+      } else {
+        fotoSiswaFix = fotoUrlRaw;
+      }
+    } else {
+      fotoSiswaFix = fotoUrlRaw;
+    }
+  }
+  
+  // --- INTEGRASI BARU: KONDISI ALASAN DITOLAK ---
+  // Ambil alasan ditolak lama jika sebelumnya sudah pernah diisi
+  var alasanLama = (s.alasan_ditolak && s.alasan_ditolak !== "-") ? s.alasan_ditolak : "";
+  
+  // Tentukan apakah kotak input langsung muncul atau tersembunyi di awal berdasarkan status bawaannya
+  var displayAlasan = (s.status === "Ditolak") ? "block" : "none";
+  
+  // 3. Susun isi tampilan Modal HTML Verifikasi
+  var htmlModal = "<div class='row g-3'>" +
+      "<div class='col-md-4 text-center border-end pe-md-3'>" +
+        "<img src='" + fotoSiswaFix + "' class='img-thumbnail rounded-circle mb-3 shadow-sm' style='width: 130px; height: 130px; object-fit: cover;' onerror='this.src=\"https://cdn-icons-png.flaticon.com/512/149/149071.png\";'>" +
+        "<h6 class='fw-bold mb-1 text-dark'>" + s.nama + "</h6>" +
+        "<p class='text-muted small font-monospace mb-3'>ID: " + s.id_pendaftar + "<br>NISN: " + s.nisn + "</p>" +
+        "<div class='card bg-light border-0 p-3 rounded-3 text-start'>" +
+          "<label class='form-label fw-bold text-dark small mb-2'>Keputusan Seleksi:</label>" +
+          
+          // MODIFIKASI: Menambahkan onchange='handleStatusChangeAdmin(this.value)' agar responsif
+          "<select id='selectAksiStatusAdmin' class='form-select form-select-sm mb-2 rounded-3 shadow-sm' onchange='handleStatusChangeAdmin(this.value)'>" +
+            "<option value='Pending' " + (s.status === "Pending" ? "selected" : "") + ">⏳ Pending</option>" +
+            "<option value='Diterima' " + (s.status === "Diterima" ? "selected" : "") + ">✅ Diterima</option>" +
+            "<option value='Ditolak' " + (s.status === "Ditolak" ? "selected" : "") + ">❌ Ditolak</option>" +
+          "</select>" +
+          
+          // SISIPAN BARU: Textarea Input Alasan Ditolak
+          "<div id='boxAlasanDitolakAdmin' class='mb-3' style='display: " + displayAlasan + ";'>" +
+            "<label class='form-label small fw-semibold text-danger mb-1'>Alasan Ditolak:</label>" +
+            "<textarea id='inpAlasanDitolakAdmin' class='form-control form-control-sm rounded-3' rows='3' placeholder='Contoh: Berkas Kartu Keluarga buram atau kuota zonasi penuh.'>" + alasanLama + "</textarea>" +
+          "</div>" +
+          
+          "<button type='button' class='btn btn-dark btn-sm w-100 rounded-3 py-2 shadow-sm' onclick='simpanKeputusanSeleksiOtoritas(\"" + s.id_pendaftar + "\", this)'>Simpan Status</button>" +
+        "</div>" +
+      "</div>" +
+      "<div class='col-md-8 ps-md-3'>" +
+        "<h6 class='fw-bold text-primary mb-2 border-bottom pb-1'>Biodata Formulir Dapodik Siswa</h6>" +
+        "<table class='table table-sm table-borderless small mb-4'>" +
+          "<tbody>" +
+            "<tr><td style='width: 35%' class='text-muted'>NIK Calon Siswa</td><td class='fw-bold text-dark'>: " + (s.nik_siswa || "-") + "</td></tr>" +
+            "<tr><td class='text-muted'>Tempat, Tgl Lahir</td><td class='fw-bold text-dark'>: " + (s.tempat_lahir || "-") + ", " + (s.tanggal_lahir || "-") + "</td></tr>" +
+            "<tr><td class='text-muted'>Jenis Kelamin</td><td class='fw-bold text-dark'>: " + (s.jenis_kelamin || "-") + "</td></tr>" +
+            "<tr><td class='text-muted'>Jenis Pendaftaran</td><td class='fw-bold text-dark'>: " + (s.jenis_pendaftaran || "-") + " (Kelas " + (s.kelas_dimasuki || "-") + ")</td></tr>" +
+            "<tr><td class='text-muted'>Nama & NIK Ayah</td><td class='fw-bold text-dark'>: " + (s.nama_ayah || "-") + "</td></tr>" +
+            "<tr><td class='text-muted'>Nama & NIK Ibu</td><td class='fw-bold text-dark'>: " + (s.nama_ibu || "-") + "</td></tr>" +
+            "<tr><td class='text-muted'>Alamat Rumah</td><td class='fw-bold text-dark'>: " + (s.alamat || "-") + "</td></tr>" +
+          "</tbody>" +
+        "</table>" +
+        "<h6 class='fw-bold text-primary mb-2 border-bottom pb-1'>Pratinjau Link Berkas Dokumen Fisik</h6>" +
+        "<div class='d-flex flex-wrap gap-2 pt-1'>" +
+          buatLinkTombolBerkasSiswa("Kartu Keluarga", s.link_kk) +
+          buatLinkTombolBerkasSiswa("Akta Kelahiran", s.link_akta) +
+          buatLinkTombolBerkasSiswa("SKL / Ijazah", s.link_skl) +
+        "</div>" +
+      "</div>" +
+    "</div>";
+  
+  document.getElementById('kontenModalVerifikasi').innerHTML = htmlModal;
+  var elemenModal = new bootstrap.Modal(document.getElementById('modalVerifikasiSiswa'));
+  elemenModal.show();
+}
+
+function handleStatusChangeAdmin(val) {
+  var box = document.getElementById('boxAlasanDitolakAdmin');
+  if (!box) return;
+  if (val === "Ditolak") {
+    box.style.display = "block";
+  } else {
+    box.style.display = "none";
+  }
+}
+
+function buatLinkTombolBerkasSiswa(namaBerkas, url) {
+  if (!url || url === "" || url === "-") {
+    return "<button class='btn btn-sm btn-light border text-muted rounded-3 px-2' disabled>" + namaBerkas + " (Kosong)</button>";
+  }
+  return "<a href='" + url + "' target='_blank' class='btn btn-sm btn-outline-dark rounded-3 px-3 shadow-sm'>Cek " + namaBerkas + "</a>";
+}
+
+function simpanKeputusanSeleksiOtoritas(idSiswa, btn) {
+  var idSekolahAdmin = typeof admSchId !== 'undefined' ? admSchId : "";
+  if (!idSekolahAdmin) {
+    var sesi = localStorage.getItem("spmb_sesi_user");
+    if (sesi) idSekolahAdmin = JSON.parse(sesi).id_sekolah || "";
+  }
+  
+  // 1. Ambil nilai status dan nilai alasan secara aman
+  var statusBaru = document.getElementById('selectAksiStatusAdmin').value;
+  var elAlasan = document.getElementById('inpAlasanDitolakAdmin');
+  var alasanBaru = elAlasan ? elAlasan.value.trim() : "-"; // Ambil teks alasan jika elemennya ada
+
+  var txtAsli = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = "Menyimpan...";
+  
+  google.script.run
+    .withSuccessHandler(function(res) {
+      btn.disabled = false; btn.innerHTML = txtAsli;
+      if (res && res.status === "success") {
+        alert("✓ Status Seleksi Calon Siswa ID: " + idSiswa + " Berhasil Diperbarui.");
+        var modalEl = document.getElementById('modalVerifikasiSiswa');
+        var instance = bootstrap.Modal.getInstance(modalEl);
+        if (instance) instance.hide();
+        muatTabelPendaftarSiswaCabang(null); // Segarkan tabel data
+      } else {
+        alert("⚠️ Gagal memperbarui status: " + res.message);
+      }
+    })
+    .withFailureHandler(function(err) {
+      btn.disabled = false; btn.innerHTML = txtAsli;
+      alert("❌ Akses Server Terputus: Perubahan gagal disimpan.");
+    })
+    // CRITICAL: Pastikan mengirimkan 4 parameter dengan urutan yang tepat!
+    .simpanKeputusanSeleksiServer(idSekolahAdmin, idSiswa, statusBaru, alasanBaru);
+}
+
+function resetFormSandiAdmin() {
+  document.getElementById('formGantiSandiAdmin').reset();
+  var inputs = ['inpSandiLamaAdmin', 'inpSandiBaruAdmin', 'inpKonfSandiAdmin'];
+  inputs.forEach(function(id) {
+    var inp = document.getElementById(id);
+    if(inp) inp.type = "password";
+  });
+  var btns = document.querySelectorAll('#modalGantiPasswordAdmin .input-group .btn');
+  btns.forEach(function(b) {
+    b.innerText = "Lihat";
+    b.className = "btn btn-outline-secondary px-3";
+  });
+}
+
+function simpanSandiBaruAdminServer(e) {
+  e.preventDefault();
+  var idSekolahAdmin = typeof admSchId !== 'undefined' ? admSchId : "";
+  if (!idSekolahAdmin) {
+    var sesi = localStorage.getItem("spmb_sesi_user");
+    if (sesi) idSekolahAdmin = JSON.parse(sesi).id_sekolah || "";
+  }
+
+  var sandiLama = document.getElementById('inpSandiLamaAdmin').value;
+  var sandiBaru = document.getElementById('inpSandiBaruAdmin').value;
+  var konfSandi = document.getElementById('inpKonfSandiAdmin').value;
+  var btnSubmit = document.getElementById('btnSubmitSandiAdmin');
+
+  if (sandiBaru !== konfSandi) {
+    alert("Gagal: Penulisan Konfirmasi Password Baru tidak cocok/berbeda.");
+    return;
+  }
+
+  var txtAsli = btnSubmit.innerHTML;
+  btnSubmit.disabled = true;
+  btnSubmit.innerHTML = "Memproses...";
+
+  google.script.run
+    .withSuccessHandler(function(res) {
+      btnSubmit.disabled = false;
+      btnSubmit.innerHTML = txtAsli;
+      if (res && res.status === "success") {
+        alert("Sukses! Password akun operator sekolah berhasil diubah.");
+        resetFormSandiAdmin();
+        var modalEl = document.getElementById('modalGantiPasswordAdmin');
+        var instance = bootstrap.Modal.getInstance(modalEl);
+        if (instance) instance.hide();
+      } else {
+        alert("Gagal Ganti Password: " + res.message);
+      }
+    })
+    .withFailureHandler(function(err) {
+      btnSubmit.disabled = false;
+      btnSubmit.innerHTML = txtAsli;
+      alert("Putus Koneksi Server: Gagal memperbarui data keamanan.");
+    })
+    .gantiPasswordAdminServer(idSekolahAdmin, sandiLama, sandiBaru);
+}
+</script>
