@@ -1,0 +1,121 @@
+<div id="login-page" class="page-content d-none">
+  <div class="row justify-content-center my-4">
+    <div class="col-md-6 col-lg-5">
+      <div class="card border-0 shadow rounded-4 p-3 p-md-4 bg-white" id="boxFormLogin">
+        <div class="card-body">
+          <div class="text-center mb-4">
+            <div class="display-6 text-success mb-2"><i class="bi bi-shield-lock-fill"></i></div>
+            <h3 class="fw-bold m-0">Masuk Portal</h3>
+            <p class="text-muted small">Silakan masuk menggunakan akun yang telah didaftarkan</p>
+          </div>
+          
+          <form id="formLoginSiswaKomponen" onsubmit="eksekusiLoginSiswaKomponen(event)">
+            <div class="mb-3">
+              <label for="loginUserKomponen" class="form-label fw-bold small">ID Pengguna / NISN / Username</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light text-muted"><i class="bi bi-card-text"></i></span>
+                <input type="text" class="form-control" id="loginUserKomponen" placeholder="Masukkan ID atau NISN Anda" required>
+              </div>
+            </div>
+            <div class="mb-4">
+              <label for="loginPassKomponen" class="form-label fw-bold small">Kata Sandi / Password</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light text-muted"><i class="bi bi-lock"></i></span>
+                <input type="password" class="form-control" id="loginPassKomponen" placeholder="Masukkan password Anda" required>
+                <button class="btn btn-outline-secondary" type="button" onclick="toggleLoginPasswordVisibilityKomponen()">
+                  <i class="bi bi-eye" id="toggleIconLoginKomponen"></i>
+                </button>
+              </div>
+            </div>
+            <div id="loginFeedbackKomponen" class="alert alert-danger d-none text-center small py-2 rounded-3" role="alert"></div>
+            
+            <button type="submit" id="btnSubmitLoginKomponen" class="btn btn-dark w-100 py-2 rounded-3 fw-bold shadow-sm">
+              <span id="loginSpinnerKomponen" class="spinner-border spinner-border-sm d-none" role="status"></span>
+              <span id="loginBtnTextKomponen"><i class="bi bi-box-arrow-in-right me-1"></i> Masuk Ke Sistem</span>
+            </button>
+          </form>
+          
+          <div class="text-center mt-4 border-top pt-3">
+            <a href="javascript:void(0)" class="text-decoration-none small text-secondary" onclick="switchHalaman('landing-page')">
+              <i class="bi bi-arrow-left"></i> Kembali
+            </a>
+            <span class="text-muted mx-2">|</span>
+            <a href="javascript:void(0)" class="text-decoration-none small text-success fw-bold" onclick="switchHalaman('page-register')">
+              Belum Punya Akun? Daftar
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/**
+ * ENGINE JAVASCRIPT: LOGIKA INPUT LOGIN KUSTOM
+ */
+function toggleLoginPasswordVisibilityKomponen() {
+  var pInput = document.getElementById('loginPassKomponen');
+  var icon = document.getElementById('toggleIconLoginKomponen');
+  if (!pInput || !icon) return;
+
+  if (pInput.type === "password") { 
+    pInput.type = "text"; 
+    icon.className = 'bi bi-eye-slash'; 
+  } else { 
+    pInput.type = "password"; 
+    icon.className = 'bi bi-eye'; 
+  }
+}
+
+function eksekusiLoginSiswaKomponen(e) {
+  e.preventDefault();
+  var inputUser = document.getElementById('loginUserKomponen').value.trim();
+  var inputPass = document.getElementById('loginPassKomponen').value.trim();
+  var feedback = document.getElementById('loginFeedbackKomponen');
+  var btn = document.getElementById('btnSubmitLoginKomponen');
+  var spinner = document.getElementById('loginSpinnerKomponen');
+  var btnText = document.getElementById('loginBtnTextKomponen');
+  
+  if(feedback) { feedback.classList.add('d-none'); feedback.innerText = ""; }
+  if(btn) btn.disabled = true;
+  if(spinner) spinner.classList.remove('d-none');
+  if(btnText) btnText.innerText = "Memverifikasi...";
+  
+  if (typeof google !== 'undefined' && google.script && google.script.run) {
+    google.script.run
+      .withSuccessHandler(function(res) {
+        if(btn) btn.disabled = false;
+        if(spinner) spinner.classList.add('d-none');
+        if(btnText) btnText.innerHTML = `<i class="bi bi-box-arrow-in-right me-1"></i> Masuk Ke Sistem`;
+        
+        if (res && res.status === "success") {
+          if(feedback) feedback.classList.add('d-none');
+          document.getElementById('loginUserKomponen').value = "";
+          document.getElementById('loginPassKomponen').value = "";
+          // Memanggil fungsi penangan session login di Index.html induk
+          tanganiHasilLogin(res); 
+        } else {
+          if(feedback) {
+            feedback.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-1"></i> ${res.message || 'ID Pengguna atau Password salah.'}`;
+            feedback.classList.remove('d-none');
+          } else {
+            alert("Gagal: " + res.message);
+          }
+        }
+      })
+      .withFailureHandler(function(err) {
+        if(btn) btn.disabled = false;
+        if(spinner) spinner.classList.add('d-none');
+        if(btnText) btnText.innerHTML = `<i class="bi bi-box-arrow-in-right me-1"></i> Masuk Ke Sistem`;
+        if(feedback) {
+          feedback.innerHTML = `<i class="bi bi-wifi-off me-1"></i> Gangguan Sistem Cloud: ${err.message}`;
+          feedback.classList.remove('d-none');
+        } else {
+          alert("Eror Jaringan: " + err.message);
+        }
+      })
+      .prosesAutentikasi(inputUser, inputPass);
+  }
+}
+</script>
