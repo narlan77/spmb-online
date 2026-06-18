@@ -1,10 +1,10 @@
 // =============================================================================
 //               KONFIGURASI MASTER BASIS DATA CLOUD (SPMB 2026)
 // =============================================================================
-const FOLDER_UTAMA_ID = "17ML3tgGo1hUrv0t--1-bCpauXgEZ2S43";
-const FOLDER_PENDAFTAR_ID = "1G56PUUkC4YbYRayQiiC3qSwKHKTCSPTG";
-const MASTER_SS_ID = "17D78-ytNgB8K-o5HmOPgHFmS4nkI8abL6FtAZUynFWE";
-const TEMPLATE_SEKOLAH_SS_ID = "1quh-53XFHcZAy2Yf2wIEbCklhMylP5h8fQnyTXP2WL4";
+const FOLDER_UTAMA_ID = "KODE__GDRIVE_FOLDER_UTAMA";
+const FOLDER_PENDAFTAR_ID = "KODE_GDRIVE_FOLDER_UNTUK_DATA_PENDAFTARAN";
+const MASTER_SS_ID = "KODE_GDRIVE_SPREADSHEET_UTAMA(MASTER_DATABASE)";
+const TEMPLATE_SEKOLAH_SS_ID = "KODE_GDRIVE_TEMPLATE_DATA_SEKOLAH";
 
 // =============================================================================
 // [1] CORE ENGINE: RENDERING CORE WEB APPLICATION (SPA)
