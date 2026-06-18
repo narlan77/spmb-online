@@ -1,0 +1,647 @@
+<div id="page-dash-siswa" class="page-content d-none">
+  <div class="container-fluid px-0">
+    
+    <div class="row g-3 mb-4">
+      <div class="col-12">
+        <div class="card border-0 shadow-sm rounded-4 bg-primary text-white">
+          <div class="card-body p-4">
+            <div class="d-flex flex-column flex-sm-row align-items-center text-center text-sm-start">
+              
+              <div class="flex-shrink-0 position-relative mb-3 mb-sm-0">
+                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center overflow-hidden border border-3 border-white shadow" style="width: 90px; height: 90px;">
+                  <img id="imgFotoProfil" src="" class="w-100 h-100 object-fit-cover d-none" alt="Foto">
+                  <i id="iconFotoProfil" class="bi bi-person-fill text-primary display-4"></i>
+                </div>
+                <input type="file" id="fileFoto" class="d-none" accept=".jpg,.jpeg,.png" onchange="uploadFotoProfil(this)">
+                <button class="btn btn-dark btn-sm rounded-circle position-absolute bottom-0 end-0 p-1 shadow-sm d-flex align-items-center justify-content-center" style="width: 28px; height: 28px;" onclick="document.getElementById('fileFoto').click()">
+                  <i class="bi bi-camera-fill" style="font-size: 0.75rem;"></i>
+                </button>
+              </div>
+              
+              <div class="flex-grow-1 ms-sm-4">
+                <span class="badge bg-white text-primary mb-2 px-3 py-1 rounded-pill text-xs fw-bold tracking-widest text-uppercase">Portal Siswa</span>
+                <h4 class="fw-bold mb-1" id="sisNamaDisplay">Memuat Nama Siswa...</h4>
+                <p class="mb-0 opacity-75 small" id="sisNisnDisplay">ID REG: - | NISN: -</p>
+                <p class="mb-0 opacity-75 small mt-1" id="sisSekolahDisplay">
+                  <i class="bi bi-building-fill me-1"></i> Hubungan Cabang Instansi: Memuat...
+                </p>
+              </div>
+              
+              <div class="mt-3 mt-sm-0 flex-shrink-0 d-flex flex-column align-items-center gap-2">
+                <span id="sisStatusBadge" class="badge bg-warning text-dark px-3 py-2 fs-6">Status Seleksi: Pending</span>
+                <button class="btn btn-light text-primary btn-sm rounded-pill px-3 fw-bold shadow-sm" onclick="segarkanBerkasSiswa(this)">
+                  <i class="bi bi-arrow-clockwise me-1"></i> Segarkan Data
+                </button>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col-12" id="boxPengumumanSiswa"></div>
+    </div>
+
+    <div class="row g-3">
+      
+      <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-4 h-100">
+          <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
+            <h5 class="fw-bold text-dark mb-0"><i class="bi bi-file-earmark-person-fill text-primary me-2"></i>Formulir Biodata Dapodik</h5>
+          </div>
+          <div class="card-body p-4">
+            
+            <div class="row g-3 mb-4">
+              <h6 class="fw-bold text-primary border-bottom pb-2 mb-0"><i class="bi bi-person-lines-fill me-2"></i>Biodata Calon Siswa</h6>
+              <div class="col-md-6">
+                <label class="form-label small text-muted mb-1">Nama Lengkap <span class="text-danger" style="font-size:0.7rem;">(Terkunci Operator)</span></label>
+                <input type="text" class="form-control form-control-sm bg-light text-muted" id="f_nama" readonly>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small text-muted mb-1">Nomor Kontak / WhatsApp</label>
+                <input type="text" class="form-control form-control-sm" id="f_kontak">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small text-muted mb-1">NIK Calon Siswa</label>
+                <input type="text" class="form-control form-control-sm" id="f_nik_siswa">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small text-muted mb-1">Asal Sekolah</label>
+                <input type="text" class="form-control form-control-sm" id="f_asal">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small text-muted mb-1">Tempat Lahir</label>
+                <input type="text" class="form-control form-control-sm" id="f_tempat_lahir">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small text-muted mb-1">Tanggal Lahir</label>
+                <input type="date" class="form-control form-control-sm" id="f_tanggal_lahir">
+              </div>
+              <div class="col-12">
+                <label class="form-label small text-muted mb-1">Alamat Lengkap Rumah</label>
+                <textarea class="form-control form-control-sm" id="f_alamat" rows="2"></textarea>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small text-muted mb-2 d-block">Jenis Kelamin</label>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="rb_jk" id="jk_l" value="Laki-laki">
+                  <label class="form-check-label small" for="jk_l">Laki-laki</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="rb_jk" id="jk_p" value="Perempuan">
+                  <label class="form-check-label small" for="jk_p">Perempuan</label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small text-muted mb-2 d-block">Jenis Pendaftaran</label>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="rb_jp" id="jp_baru" value="Siswa Baru">
+                  <label class="form-check-label small" for="jp_baru">Siswa Baru</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="rb_jp" id="jp_pindah" value="Pindahan">
+                  <label class="form-check-label small" for="jp_pindah">Pindahan</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row g-3">
+              <h6 class="fw-bold text-primary border-bottom pb-2 mb-0"><i class="bi bi-people-fill me-2"></i>Data Orang Tua & Kelas</h6>
+              <div class="col-md-6">
+                <label class="form-label small text-muted mb-1">Nama Ayah Kandung</label>
+                <input type="text" class="form-control form-control-sm" id="f_nama_ayah">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small text-muted mb-1">NIK Ayah</label>
+                <input type="text" class="form-control form-control-sm" id="f_nik_ayah">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small text-muted mb-1">Nama Ibu Kandung</label>
+                <input type="text" class="form-control form-control-sm" id="f_nama_ibu">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small text-muted mb-1">NIK Ibu</label>
+                <input type="text" class="form-control form-control-sm" id="f_nik_ibu">
+              </div>
+              <div class="col-sm-4">
+                <label class="form-label small text-muted mb-1">Jumlah Saudara</label>
+                <input type="number" class="form-control form-control-sm text-center" id="f_jumlah_saudara">
+              </div>
+              <div class="col-sm-4">
+                <label class="form-label small text-muted mb-1">Anak Ke-</label>
+                <input type="number" class="form-control form-control-sm text-center" id="f_anak_ke">
+              </div>
+              <div class="col-sm-4">
+                <label class="form-label small text-muted mb-1">Target Kelas</label>
+                <input type="text" class="form-control form-control-sm text-center" id="f_kelas_dimasuki">
+              </div>
+            </div>
+
+            <div class="row mt-4 border-top pt-3">
+              <div class="col-12 text-end">
+                <button type="button" id="btnSimpanBiodata" class="btn btn-success btn-sm rounded-pill px-4 fw-bold shadow-sm" onclick="simpanPerubahanBiodataSiswa(this)">
+                  <i class="bi bi-floppy-fill me-1"></i> Simpan Perubahan Biodata
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 h-100">
+          <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
+            <h6 class="fw-bold text-dark mb-0"><i class="bi bi-cloud-arrow-up-fill text-primary me-2"></i>Status Berkas Dokumen</h6>
+          </div>
+          <div class="card-body p-4">
+            
+            <div id="status_box_KK" class="p-3 border rounded-3 mb-3 bg-white">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <span class="fw-bold small d-block">Kartu Keluarga (KK)</span>
+                  <span id="badge_KK" class="badge text-xs mt-1 bg-secondary">Memuat...</span>
+                </div>
+                <div id="btn_KK" class="d-flex gap-1"></div>
+              </div>
+              <input type="file" id="file_upload_KK" class="d-none" accept=".jpg,.jpeg,.png,.pdf" onchange="uploadDokumenSiswa(this, 'KK')">
+            </div>
+
+            <div id="status_box_Akta" class="p-3 border rounded-3 mb-3 bg-white">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <span class="fw-bold small d-block">Akta Kelahiran</span>
+                  <span id="badge_Akta" class="badge text-xs mt-1 bg-secondary">Memuat...</span>
+                </div>
+                <div id="btn_Akta" class="d-flex gap-1"></div>
+              </div>
+              <input type="file" id="file_upload_Akta" class="d-none" accept=".jpg,.jpeg,.png,.pdf" onchange="uploadDokumenSiswa(this, 'Akta')">
+            </div>
+
+            <div id="status_box_SKL" class="p-3 border rounded-3 mb-3 bg-white">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <span class="fw-bold small d-block">SKL / Ijazah</span>
+                  <span id="badge_SKL" class="badge text-xs mt-1 bg-secondary">Memuat...</span>
+                </div>
+                <div id="btn_SKL" class="d-flex gap-1"></div>
+              </div>
+              <input type="file" id="file_upload_SKL" class="d-none" accept=".jpg,.jpeg,.png,.pdf" onchange="uploadDokumenSiswa(this, 'SKL')">
+            </div>
+
+            <div id="status_box_KIP" class="p-3 border rounded-3 mb-3 bg-white">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <span class="fw-bold small d-block">Kartu KIP (Opsional)</span>
+                  <span id="badge_KIP" class="badge text-xs mt-1 bg-secondary">Memuat...</span>
+                </div>
+                <div id="btn_KIP" class="d-flex gap-1"></div>
+              </div>
+              <input type="file" id="file_upload_KIP" class="d-none" accept=".jpg,.jpeg,.png,.pdf" onchange="uploadDokumenSiswa(this, 'KIP')">
+            </div>
+
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<script>
+/**
+ * 1. FUNGSI UTAMA SINKRONISASI DATABASE SISWA
+ */
+function muatDataSiswaDatabase() {
+  console.log("Memulai sinkronisasi data profil lengkap siswa...");
+  
+  if (!sisSchId || !sisNisnLogin) {
+    var sesiTersimpan = localStorage.getItem("spmb_sesi_user");
+    if (sesiTersimpan) {
+      var user = JSON.parse(sesiTersimpan);
+      sisNisnLogin = user.username ? user.username.toString().trim() : "";
+      sisSchId = user.id_sekolah ? user.id_sekolah.toString().trim() : "";
+    }
+  }
+  // =====================================================================
+  // LOGIKA BARU: Tarik Nama Sekolah Langsung Dari Relasi MASTER_SS_ID
+  // =====================================================================
+  if (sisNisnLogin) {
+    google.script.run
+      .withSuccessHandler(function(namaSekolahPusat) {
+        var elSekolah = document.getElementById('sisSekolahDisplay');
+        if (elSekolah && namaSekolahPusat) {
+          elSekolah.innerHTML = `<i class="bi bi-building-fill me-1"></i> Sekolah Tujuan: <strong class="text-white bg-white bg-opacity-25 px-2 py-1 rounded shadow-sm">${namaSekolahPusat}</strong>`;
+        }
+      })
+      .ambilNamaSekolahTujuanSiswa(sisNisnLogin);
+  }
+
+  if (!sisSchId || !sisNisnLogin) {
+    var badge = document.getElementById('sisStatusBadge');
+    if (badge) {
+      badge.className = "badge bg-danger px-3 py-2 fs-6";
+      badge.innerText = "Status: Sesi Habis, Silakan Login Ulang";
+    }
+    return;
+  }
+  
+  google.script.run
+    .withSuccessHandler(function(res) {
+      if (res && res.status === "success") {
+        var d = res.data;
+        sisIdPendaftar = d.id_pendaftar; 
+        
+        // Render Teks Institusi jika dikirim oleh sistem
+        var elSekolah = document.getElementById('sisSekolahDisplay');
+        if (elSekolah && (d.nama_sekolah || d.Nama_Sekolah)) {
+          elSekolah.innerHTML = `<i class="bi bi-building-fill me-1"></i> Hubungan Cabang Instansi: <strong>${d.nama_sekolah || d.Nama_Sekolah}</strong>`;
+        }
+        
+        if (document.getElementById('sisNamaDisplay')) {
+          document.getElementById('sisNamaDisplay').innerText = d.nama || "Siswa Pendaftar";
+        }
+        if (document.getElementById('sisNisnDisplay')) {
+          document.getElementById('sisNisnDisplay').innerText = "ID REG: " + (sisIdPendaftar || "-") + " | NISN: " + (d.nisn || "-");
+        }
+       
+        var status = d.status_pendaftaran || d.status || "Pending";
+        var badge = document.getElementById('sisStatusBadge');
+        if (badge) {
+          badge.innerText = "Status Seleksi: " + status;
+          badge.className = "badge px-3 py-2 fs-6 " + 
+            (status.toLowerCase() === "diterima" ? "bg-success" : 
+            (status.toLowerCase() === "ditolak" ? "bg-danger" : "bg-warning text-dark"));
+        }
+
+        // CONTROL WIDGET PENGUMUMAN
+        var containerPengumuman = document.getElementById('boxPengumumanSiswa');
+        if (containerPengumuman) {
+          var namaSiswa = d.nama || "Calon Siswa";
+          var catatanDitolak = d.alasan_ditolak || d.Alasan_Ditolak || "-";
+
+          if (status.toLowerCase() === "diterima") {
+            containerPengumuman.innerHTML = `
+              <div class="card border-0 shadow-sm rounded-4 p-4 text-center text-sm-start" style="background-color: #e8f5e9; border-left: 5px solid #2e7d32 !important;">
+                <div class="d-flex align-items-center gap-3 flex-column flex-sm-row">
+                  <div class="text-success flex-shrink-0" style="font-size: 2.3rem;"><i class="bi bi-trophy-fill"></i></div>
+                  <div class="flex-grow-1">
+                    <h5 class="fw-bold text-success mb-1">Selamat, ${namaSiswa}!</h5>
+                    <p class="mb-1 text-dark fw-medium small">Anda dinyatakan <span class="badge bg-success px-2 py-05 rounded-pill text-xs">DITERIMA</span> sebagai Calon Siswa Baru.</p>
+                    <small class="text-muted d-block mt-1">Silakan lakukan proses daftar ulang berkas fisik ke panitia pelaksana sekolah sesuai dengan jadwal reguler yang ditentukan.</small>
+                  </div>
+                </div>
+              </div>
+            `;
+          } else if (status.toLowerCase() === "ditolak") {
+            var teksAlasan = (catatanDitolak && catatanDitolak !== "" && catatanDitolak !== "-") 
+                             ? catatanDitolak 
+                             : "Mohon hubungi operator administrasi sekolah pilihan Anda untuk petunjuk verifikasi berkas lebih lanjut.";
+
+            containerPengumuman.innerHTML = `
+              <div class="card border-0 shadow-sm rounded-4 p-4" style="background-color: #fdf2f2; border-left: 5px solid #dc2626 !important;">
+                <div class="d-flex align-items-start gap-3 flex-column flex-sm-row">
+                  <div class="text-danger flex-shrink-0" style="font-size: 2.2rem;"><i class="bi bi-exclamation-octagon-fill"></i></div>
+                  <div class="flex-grow-1">
+                    <h5 class="fw-bold text-danger mb-1">Mohon Maaf, Berkas Verifikasi Anda Ditolak</h5>
+                    <p class="mb-2 text-secondary small">Status Seleksi Akun Anda saat ini: <span class="badge bg-danger px-2 py-1 rounded-pill">DITOLAK</span></p>
+                    <div class="p-3 bg-white rounded-3 border border-danger-subtle mb-0 shadow-sm">
+                      <strong class="text-dark d-block mb-1 small text-uppercase tracking-wider" style="font-size: 0.72rem; color: #555;"><i class="bi bi-chat-left-text-fill text-danger me-1"></i>Catatan Operator Sekolah:</strong>
+                      <p class="mb-0 text-danger fw-semibold small font-monospace" style="word-break: break-word;">${teksAlasan}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
+          } else {
+            containerPengumuman.innerHTML = `
+              <div class="card border-0 shadow-sm rounded-4 p-4 text-center text-sm-start bg-white border-start border-warning" style="border-left-width: 5px !important;">
+                <div class="d-flex align-items-center gap-3 flex-column flex-sm-row">
+                  <div class="text-warning flex-shrink-0" style="font-size: 2rem;"><i class="bi bi-hourglass-split"></i></div>
+                  <div class="flex-grow-1">
+                    <h6 class="fw-bold text-dark mb-1">Berkas Dalam Proses Peninjauan</h6>
+                    <p class="mb-0 text-muted small">Tim panitia pelaksana sekolah sedang memeriksa validitas dokumen fisik dan isian formulir Dapodik Anda. Mohon pantau halaman ini secara berkala.</p>
+                  </div>
+                </div>
+              </div>
+            `;
+          }
+        }
+
+        // --- DISTRIBUSI DATA KE INPUT FORM BIODATA ---
+        if (document.getElementById('f_nama')) document.getElementById('f_nama').value = d.nama || "";
+        if (document.getElementById('f_kontak')) document.getElementById('f_kontak').value = d.kontak || "";
+        if (document.getElementById('f_asal')) document.getElementById('f_asal').value = d.asal_sekolah || "";
+        if (document.getElementById('f_alamat')) document.getElementById('f_alamat').value = d.alamat || "";
+        if (document.getElementById('f_nik_siswa')) document.getElementById('f_nik_siswa').value = d.nik_siswa || "";
+        if (document.getElementById('f_tempat_lahir')) document.getElementById('f_tempat_lahir').value = d.tempat_lahir || "";
+        
+        // Memastikan format Tanggal Lahir kompatibel dengan tag <input type="date">
+        if (document.getElementById('f_tanggal_lahir')) {
+          var tglRaw = d.tanggal_lahir || "";
+          if (tglRaw.includes("T")) tglRaw = tglRaw.split("T")[0];
+          document.getElementById('f_tanggal_lahir').value = tglRaw;
+        }
+        
+        if (document.getElementById('f_nama_ayah')) document.getElementById('f_nama_ayah').value = d.nama_ayah || "";
+        if (document.getElementById('f_nik_ayah')) document.getElementById('f_nik_ayah').value = d.nik_ayah || "";
+        if (document.getElementById('f_nama_ibu')) document.getElementById('f_nama_ibu').value = d.nama_ibu || "";
+        if (document.getElementById('f_nik_ibu')) document.getElementById('f_nik_ibu').value = d.nik_ibu || "";
+        if (document.getElementById('f_jumlah_saudara')) document.getElementById('f_jumlah_saudara').value = d.jumlah_saudara || 0;
+        if (document.getElementById('f_anak_ke')) document.getElementById('f_anak_ke').value = d.anak_ke || 1;
+        if (document.getElementById('f_kelas_dimasuki')) document.getElementById('f_kelas_dimasuki').value = d.kelas_dimasuki || "";
+        
+        // RADIO BUTTONS JENIS KELAMIN
+        var jkVal = d.jenis_kelamin || "";
+        var radJkL = document.getElementById('jk_l');
+        var radJkP = document.getElementById('jk_p');
+        if (radJkL) radJkL.checked = (jkVal.toLowerCase() === "laki-laki");
+        if (radJkP) radJkP.checked = (jkVal.toLowerCase() === "perempuan");
+        
+        // RADIO BUTTONS JENIS PENDAFTARAN
+        var jpVal = d.jenis_pendaftaran || "";
+        var radJpBaru = document.getElementById('jp_baru');
+        var radJpPindah = document.getElementById('jp_pindah');
+        if (radJpBaru) radJpBaru.checked = (jpVal.toLowerCase() === "siswa baru" || jpVal.toLowerCase() === "baru");
+        if (radJpPindah) radJpPindah.checked = (jpVal.toLowerCase() === "pindahan");
+        
+        // RENDER FOTO PROFIL
+        var imgProfil = document.getElementById('imgFotoProfil');
+        var iconProfil = document.getElementById('iconFotoProfil');
+        var fotoUrl = d.link_foto || d.Link_Foto || ""; 
+        
+        if (fotoUrl && fotoUrl !== "" && fotoUrl !== "-") {
+          if (fotoUrl.includes("drive.google.com")) {
+            var fileId = "";
+            if (fotoUrl.includes("/d/")) {
+              fileId = fotoUrl.split("/d/")[1].split("/")[0];
+            } else if (fotoUrl.includes("id=")) {
+              fileId = fotoUrl.split("id=")[1].split("&")[0];
+            }
+            if (fileId !== "") {
+              fotoUrl = "https://lh3.googleusercontent.com/d/" + fileId;
+            }
+          }
+          if (imgProfil) {
+            imgProfil.src = fotoUrl;
+            imgProfil.classList.remove('d-none');
+          }
+          if (iconProfil) iconProfil.classList.add('d-none');
+        } else {
+          if (imgProfil) imgProfil.classList.add('d-none');
+          if (iconProfil) {
+            iconProfil.className = "bi bi-person-circle text-secondary display-4";
+            iconProfil.classList.remove('d-none');
+          }
+        }
+        
+        // SEGARKAN PRATINJAU BERKAS DOKUMEN
+        if (typeof perbaruiUIStatusDokumenSiswa === "function") {
+          perbaruiUIStatusDokumenSiswa('KK', d.link_kk || d.Link_KK);
+          perbaruiUIStatusDokumenSiswa('Akta', d.link_akta || d.Link_Akta);
+          perbaruiUIStatusDokumenSiswa('SKL', d.link_skl || d.Link_SKL || d.link_ijazah || d.Link_Ijazah);
+          perbaruiUIStatusDokumenSiswa('KIP', d.link_kip || d.Link_KIP);
+        }
+        
+      } else {
+        alert("⚠️ Gagal memuat profil: " + res.message);
+      }
+    })
+    .withFailureHandler(function(err) {
+      console.error("Gagal terhubung ke Apps Script Server:", err);
+      alert("❌ Eror Jaringan: Tidak dapat memuat profil data siswa.");
+    })
+    .ambilProfilSiswa(sisSchId, sisNisnLogin); 
+}
+
+/**
+ * 2. ACTION FRONTEND: FUNGSI TOMBOL SIMPAN UPDATE BIODATA KE SERVER GS
+ */
+function simpanPerubahanBiodataSiswa(btn) {
+  if (typeof sisSchId === 'undefined' || typeof sisIdPendaftar === 'undefined' || !sisSchId || !sisIdPendaftar) {
+    alert("❌ Sesi Gagal: Parameter ID Instansi atau Sesi Siswa tidak valid.");
+    return;
+  }
+  
+  // Ambil opsi Radio Button Jenis Kelamin secara aman
+  var jkTerpilih = "-";
+  var rJk = document.getElementsByName("rb_jk");
+  for (var i = 0; i < rJk.length; i++) {
+    if (rJk[i].checked) { jkTerpilih = rJk[i].value; break; }
+  }
+
+  // Ambil opsi Radio Button Jenis Pendaftaran secara aman
+  var jpTerpilih = "-";
+  var rJp = document.getElementsByName("rb_jp");
+  for (var i = 0; i < rJp.length; i++) {
+    if (rJp[i].checked) { jpTerpilih = rJp[i].value; break; }
+  }
+
+  var tombolAsli = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Menyimpan...`;
+
+  // Bungkus seluruh input data form yang diizinkan untuk diubah
+  var payload = {
+    kontak: document.getElementById('f_kontak').value.trim(),
+    nik_siswa: document.getElementById('f_nik_siswa').value.trim(),
+    asal_sekolah: document.getElementById('f_asal').value.trim(),
+    tempat_lahir: document.getElementById('f_tempat_lahir').value.trim(),
+    tanggal_lahir: document.getElementById('f_tanggal_lahir').value,
+    alamat: document.getElementById('f_alamat').value.trim(),
+    jenis_kelamin: jkTerpilih,
+    jenis_pendaftaran: jpTerpilih,
+    nama_ayah: document.getElementById('f_nama_ayah').value.trim(),
+    nik_ayah: document.getElementById('f_nik_ayah').value.trim(),
+    nama_ibu: document.getElementById('f_nama_ibu').value.trim(),
+    nik_ibu: document.getElementById('f_nik_ibu').value.trim(),
+    jumlah_saudara: document.getElementById('f_jumlah_saudara').value || "0",
+    anak_ke: document.getElementById('f_anak_ke').value || "1",
+    kelas_dimasuki: document.getElementById('f_kelas_dimasuki').value.trim()
+  };
+
+  // Kirim data modifikasi ke Code.gs backend
+  google.script.run
+    .withSuccessHandler(function(res) {
+      btn.disabled = false;
+      btn.innerHTML = tombolAsli;
+      if (res && res.status === "success") {
+        alert("✅ Berhasil! Biodata Dapodik Anda telah diperbarui di database pusat.");
+        muatDataSiswaDatabase(); // Tarik ulang data segar dari sheet
+      } else {
+        alert("❌ Gagal menyimpan perubahan: " + res.message);
+      }
+    })
+    .withFailureHandler(function(err) {
+      btn.disabled = false;
+      btn.innerHTML = tombolAsli;
+      alert("🚨 Gangguan Jaringan Server: " + err.message);
+    })
+    .updateBiodataSiswaServer(sisSchId, sisIdPendaftar, payload);
+}
+
+/**
+ * 3. FUNGSI UNTUK MENGATUR BADGE DAN TOMBOL AKSES BERKAS DOKUMEN
+ */
+function perbaruiUIStatusDokumenSiswa(idJenis, urlBerkas) {
+  var badgeEl = document.getElementById('badge_' + idJenis);
+  var btnContainer = document.getElementById('btn_' + idJenis);
+  if (!badgeEl || !btnContainer) return;
+
+  var adaFile = (urlBerkas && urlBerkas !== "" && urlBerkas !== "-");
+
+  if (adaFile) {
+    badgeEl.className = "badge text-xs mt-1 bg-success-subtle text-success border border-success-subtle";
+    badgeEl.innerText = "Sudah Unggah";
+    
+    btnContainer.innerHTML = `
+      <a href="${urlBerkas}" target="_blank" class="btn btn-outline-primary btn-xs rounded-pill px-2 py-0" title="Lihat Berkas"><i class="bi bi-eye"></i></a>
+      <button type="button" class="btn btn-dark btn-xs rounded-pill px-2 py-0" onclick="document.getElementById('file_upload_${idJenis}').click()" title="Ganti Berkas"><i class="bi bi-upload"></i></button>
+    `;
+  } else {
+    badgeEl.className = "badge text-xs mt-1 bg-danger-subtle text-danger border border-danger-subtle";
+    badgeEl.innerText = "Belum Ada";
+    
+    btnContainer.innerHTML = `
+      <button type="button" class="btn btn-primary btn-xs rounded-pill px-3 py-0 fw-semibold" onclick="document.getElementById('file_upload_${idJenis}').click()"><i class="bi bi-upload me-1"></i>Unggah</button>
+    `;
+  }
+}
+
+/**
+ * 4. FUNGSI UNTUK PROSES UNGGHAH BERKAS DOKUMEN (KK, AKTA, SKL, KIP)
+ */
+function uploadDokumenSiswa(input, jenisDokumen) {
+  var file = input.files[0];
+  if (!file) return;
+
+  // Batasan ukuran berkas maksimal 2MB
+  if (file.size > 2 * 1024 * 1024) {
+    alert("❌ Batas Ukuran File: Maksimal dokumen sebesar 2MB.");
+    input.value = "";
+    return;
+  }
+
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    if (typeof sisSchId === 'undefined' || typeof sisIdPendaftar === 'undefined' || !sisSchId || !sisIdPendaftar) {
+      alert("❌ Sesi Gagal: Parameter ID Instansi atau ID Siswa tidak ditemukan.");
+      return;
+    }
+
+    // Ubah tampilan UI badge menjadi animasi spinner loading
+    var badgeEl = document.getElementById('badge_' + jenisDokumen);
+    var btnContainer = document.getElementById('btn_' + jenisDokumen);
+    if (badgeEl) {
+      badgeEl.className = "badge text-xs mt-1 bg-warning-subtle text-warning border border-warning-subtle";
+      badgeEl.innerHTML = `<span class="spinner-border spinner-border-xs me-1" role="status" aria-hidden="true"></span>Mengunggah...`;
+    }
+    if (btnContainer) {
+      btnContainer.innerHTML = `<button disabled class="btn btn-outline-secondary btn-xs rounded-pill px-2 py-0 opacity-50"><i class="bi bi-hourglass-split"></i></button>`;
+    }
+
+    // Ambil nama file asli dari input komputer/HP siswa
+    var namaFileAsli = file.name;
+
+    // SINKRONISASI TOTAL PARAMETER KE SERVER (Code.gs):
+    // Urutan fungsi di Code.gs: uploadBerkasSiswa(idSekolah, idPendaftar, fileName, base64Data, tipeBerkas)
+    google.script.run
+      .withSuccessHandler(function(res) {
+        input.value = ""; // Bersihkan komponen input file DOM
+        if (res && res.status === "success") {
+          alert("✅ Sukses! Dokumen " + jenisDokumen + " Anda berhasil diperbarui.");
+          muatDataSiswaDatabase(); // Tarik ulang data segar untuk memperbarui tombol dan badge di layar
+        } else {
+          alert("❌ Gagal unggah dokumen: " + (res.message || "Eror tidak diketahui"));
+          muatDataSiswaDatabase(); 
+        }
+      })
+      .withFailureHandler(function(err) {
+        input.value = "";
+        alert("🚨 Gangguan Jaringan Cloud: " + err.message);
+        muatDataSiswaDatabase(); 
+      })
+      .uploadBerkasSiswa(sisSchId, sisIdPendaftar, namaFileAsli, e.target.result, jenisDokumen);
+  };
+  
+  reader.readAsDataURL(file);
+}
+
+/**
+ * 5. FUNGSI TOMBOL SEGARKAN DATA FRONTEND
+ */
+function segarkanBerkasSiswa(btn) {
+  var tombolAsli = "";
+  if (btn) {
+    tombolAsli = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = `
+      <span class="spinner-border spinner-border-sm text-primary me-2" role="status" aria-hidden="true"></span>
+      <span class="text-dark fw-semibold">Menyegarkan...</span>
+    `;
+  }
+
+  try {
+    muatDataSiswaDatabase();
+    setTimeout(function() {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = tombolAsli;
+      }
+    }, 2000);
+  } catch (err) {
+    console.error(err);
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = tombolAsli;
+    }
+  }
+}
+
+/**
+ * 6. FUNGSI UPLOAD PASFOTO PROFIL KE CLOUD DRIVE
+ */
+function uploadFotoProfil(input) {
+  var file = input.files[0];
+  if (!file) return;
+
+  if (file.size > 2 * 1024 * 1024) {
+    alert("❌ Batas Ukuran File: Maksimal foto profil sebesar 2MB.");
+    input.value = "";
+    return;
+  }
+
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    if (typeof sisSchId === 'undefined' || typeof sisIdPendaftar === 'undefined') {
+      alert("❌ Sesi Gagal: Parameter ID Instansi atau ID Siswa tidak ditemukan.");
+      return;
+    }
+
+    var iconProfil = document.getElementById('iconFotoProfil');
+    var imgProfil = document.getElementById('imgFotoProfil');
+    if (imgProfil) imgProfil.classList.add('d-none');
+    if (iconProfil) iconProfil.className = "spinner-border text-primary display-4";
+
+    google.script.run
+      .withSuccessHandler(function(res) {
+        if (res && res.status === "success") {
+          alert("✅ Sukses! Foto profil Anda berhasil diperbarui.");
+          muatDataSiswaDatabase(); 
+        } else {
+          alert("❌ Gagal unggah foto: " + res.message);
+          muatDataSiswaDatabase(); 
+        }
+      })
+      .withFailureHandler(function(err) {
+        alert("🚨 Gangguan Jaringan: " + err.message);
+        muatDataSiswaDatabase(); 
+      })
+      .prosesUploadFotoProfilServer(sisSchId, sisIdPendaftar, e.target.result);
+  };
+  
+  reader.readAsDataURL(file);
+}
+</script>
