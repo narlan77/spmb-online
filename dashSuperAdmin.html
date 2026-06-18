@@ -1,0 +1,243 @@
+<div id="page-dash-superadmin" class="page-content d-none">
+  
+  <div class="row g-3 mb-4">
+    <div class="col-12">
+      <div class="card border-0 shadow-sm rounded-4 bg-dark text-white">
+        <div class="card-body p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+          <div>
+            <span class="badge bg-success mb-2 px-3 py-1 rounded-pill text-xs fw-bold tracking-widest text-uppercase">Otoritas Wilayah</span>
+            <h4 class="fw-bold mb-1" id="superNamaDisplay">Memuat Nama Koordinator...</h4>
+            <p class="mb-0 opacity-75 small"><i class="bi bi-geo-alt-fill text-success me-1"></i> Admin Jaringan Sekolah</p>
+          </div>
+          <div>
+            <button class="btn btn-success btn-sm rounded-pill px-3 fw-bold shadow-sm me-2" onclick="muatTabelSuperadminSekolah()">
+              <i class="bi bg-dark bi-arrow-clockwise"></i> Segarkan Data Master
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100">
+        <div class="d-flex align-items-center gap-3">
+          <div class="p-3 bg-success-subtle text-success rounded-4 fs-3"><i class="bi bi-building-check"></i></div>
+          <div>
+            <h6 class="text-muted small mb-1 fw-bold">Jaringan Sekolah Aktif</h6>
+            <h3 class="fw-bold m-0" id="statSekolahAktif">-</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100">
+        <div class="d-flex align-items-center gap-3">
+          <div class="p-3 bg-primary-subtle text-primary rounded-4 fs-3"><i class="bi bi-folder-fill"></i></div>
+          <div>
+            <h6 class="text-muted small mb-1 fw-bold">Koneksi Database Cloud</h6>
+            <h4 class="fw-bold m-0 text-truncate" style="max-width: 150px;">Google Drive Storage</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100">
+        <div class="d-flex align-items-center gap-3">
+          <div class="p-3 bg-info-subtle text-info rounded-4 fs-3"><i class="bi bi-shield-check"></i></div>
+          <div>
+            <h6 class="text-muted small mb-1 fw-bold">Status Enkripsi Akses</h6>
+            <span class="badge bg-success-subtle text-success fw-bold">Secure SHA-256</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+      <div>
+        <h5 class="fw-bold m-0 text-success"><i class="bi bi-building-gear me-2"></i>Registrasi & Jaringan Sekolah</h5>
+        <small class="text-muted">Pantau, daftarkan, dan kelola pemutusan otomatis database cloud sekolah cabang</small>
+      </div>
+      <button class="btn btn-success rounded-3 fw-bold px-3 shadow-sm btn-sm" data-bs-toggle="modal" data-bs-target="#modalTambahSekolah">
+        <i class="bi bi-plus-circle-fill me-1"></i> Daftarkan Sekolah Baru
+      </button>
+    </div>
+    
+    <div class="table-responsive">
+      <table class="table table-hover align-middle border-top m-0">
+        <thead class="table-light">
+          <tr>
+            <th class="small fw-bold text-secondary">ID Instansi</th>
+            <th class="small fw-bold text-secondary">Nama Sekolah</th>
+            <th class="small fw-bold text-secondary">NPSN</th>
+            <th class="small fw-bold text-secondary">ID Database (Jaringan Sekolah)</th>
+            <th class="small fw-bold text-secondary">Sandi Admin</th>
+            <th class="small fw-bold text-secondary text-center">Aksi Otoritas</th>
+          </tr>
+        </thead>
+        <tbody id="tabelSekolahMitraBody">
+          <tr>
+            <td colspan="6" class="text-center text-muted small py-4">
+              <span class="spinner-border spinner-border-sm text-success me-2"></span>Menghubungkan jaringan database Master...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="modalTambahSekolah" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalTambahSekolahLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow rounded-4">
+      
+      <div class="modal-header bg-dark text-white rounded-top-4 py-3">
+        <h5 class="modal-title fw-bold id" id="modalTambahSekolahLabel">
+          <i class="bi bi-building-plus me-2 text-success"></i>Registrasi Sekolah Baru
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      
+      <div class="modal-body p-4">
+        <div class="alert alert-success-subtle text-success small border-0 rounded-3 mb-3">
+          <i class="bi bi-info-circle-fill me-2"></i> Sistem akan otomatis mengkloning file template Spreadsheet Pendaftar dan folder penyimpanan Google Drive untuk sekolah baru ini.
+        </div>
+        
+        <form id="formTambahSekolah" onsubmit="event.preventDefault(); eksekusiTambahSekolahMitra();">
+          <div class="mb-3">
+            <label for="addNamaSekolah" class="form-label small fw-bold text-secondary">Nama Resmi Sekolah</label>
+            <input type="text" class="form-control rounded-3 py-2" id="addNamaSekolah" placeholder="Contoh: SMPN 1 Caringin" required>
+          </div>
+          <div class="mb-3">
+            <label for="addNpsnSekolah" class="form-label small fw-bold text-secondary">Nomor Pokok Sekolah Nasional (NPSN)</label>
+            <input type="text" class="form-control rounded-3 py-2 font-monospace" id="addNpsnSekolah" placeholder="Contoh: 2021xxxx" max="8" required>
+          </div>
+          
+          <div class="d-flex gap-2 justify-content-end mt-4 pt-3 border-top">
+            <button type="button" class="btn btn-outline-secondary rounded-3 fw-bold btn-sm px-3" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" id="btnSubmitAddSekolah" class="btn btn-success rounded-3 fw-bold btn-sm px-3">
+              Buat Database & Akun
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script>
+  /**
+   * CONTROLLER A1: Memuat Data Jaringan Sekolah dari Spreadsheet Master
+   */
+  function muatTabelSuperadminSekolah() {
+    var tbody = document.getElementById('tabelSekolahMitraBody');
+    var statAktif = document.getElementById('statSekolahAktif');
+    if(!tbody) return;
+    
+    tbody.innerHTML = '<tr><td colspan="6" class="text-center small py-4"><span class="spinner-border spinner-border-sm text-success me-2"></span>Sinkronisasi Master Records...</td></tr>';
+    
+    google.script.run
+      .withSuccessHandler(function(arr) {
+        if (!arr || arr.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted small py-4"><i class="bi bi-exclamation-circle me-1"></i> Belum ada Jaringan Sekolah yang terdaftar dalam sistem.</td></tr>';
+          if(statAktif) statAktif.innerText = "0";
+          return;
+        }
+        
+        tbody.innerHTML = "";
+        var hitungSekolah = 0;
+        
+        arr.forEach(function(s) {
+          // Hanya hitung instansi dengan status aktif
+          if(s.status === "Aktif") hitungSekolah++;
+          
+          tbody.innerHTML += `
+            <tr>
+              <td class="fw-bold text-success small">${s.id_sekolah || "-"}</td>
+              <td class="small fw-bold text-dark">${s.nama_sekolah || "-"}</td>
+              <td class="small text-secondary font-monospace">${s.npsn || "-"}</td>
+              <td class="small text-muted font-monospace text-truncate" style="max-width: 180px;" title="${s.ss_id || ''}">
+                ${s.ss_id || '<span class="text-danger">Belum Terbuat</span>'}
+              </td>
+              <td class="small"><code class="bg-light px-2 py-1 rounded border text-danger font-monospace">${s.password_awal || "-"}</code></td>
+              <td class="text-center">
+                <button class="btn btn-outline-danger btn-sm py-1 px-2 rounded-3 text-xs fw-bold" onclick="eksekusiHapusSekolah('${s.id_sekolah}', '${s.nama_sekolah}')">
+                  <i class="bi bi-trash3-fill me-1"></i> Putus Hubungan
+                </button>
+              </td>
+            </tr>`;
+        });
+        
+        if(statAktif) statAktif.innerText = hitungSekolah;
+      })
+      .withFailureHandler(function(err) {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger small py-4"><i class="bi bi-x-circle-fill me-1"></i> Gagal Memuat Master: ${err.message}</td></tr>`;
+      })
+      .ambilSemuaSekolahMitra();
+  }
+
+  /**
+   * CONTROLLER A2: Menangani Pendaftaran Instansi Baru (Bypass Kloning Terbuka)
+   */
+  function eksekusiTambahSekolahMitra() {
+    var namaSekolah = document.getElementById('addNamaSekolah').value;
+    var npsnSekolah = document.getElementById('addNpsnSekolah').value;
+    var btnSubmit = document.getElementById('btnSubmitAddSekolah');
+    
+    if(!namaSekolah || !npsnSekolah) { alert("Semua baris formulir wajib diisi!"); return; }
+    
+    btnSubmit.disabled = true; 
+    btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Membangun Cloud DB & Folder...';
+    
+    google.script.run
+      .withSuccessHandler(function(res) {
+        btnSubmit.disabled = false; 
+        btnSubmit.innerHTML = 'Buat Database & Akun';
+        
+        if (res.status === "success") {
+          alert(`✓ GENERATOR SISTEM BERHASIL!\n\nInstansi: ${namaSekolah}\nID Registrasi: ${res.data.id}\nSandi Operator: ${res.data.pass}\n\nSistem otomatis menduplikasi template spreadsheet pendaftar dan folder berkas khusus.`);
+          
+          // Reset Formulir input
+          document.getElementById('addNamaSekolah').value = "";
+          document.getElementById('addNpsnSekolah').value = "";
+          
+          // Sembunyikan Modal Bootstrap secara aman
+          var modalElement = document.getElementById('modalTambahSekolah');
+          var modalInstance = bootstrap.Modal.getInstance(modalElement);
+          if(modalInstance) modalInstance.hide();
+          
+          // Refresh tabel rekap data
+          muatTabelSuperadminSekolah();
+        } else { 
+          alert("Gagal memproses instansi baru: " + res.message); 
+        }
+      })
+      .withFailureHandler(function(err) {
+        btnSubmit.disabled = false; 
+        btnSubmit.innerHTML = 'Buat Database & Akun';
+        alert("Eror Fatal Jaringan Server: " + err.message);
+      })
+      .tambahSekolahMitra(namaSekolah, npsnSekolah);
+  }
+
+  /**
+   * CONTROLLER A3: Putus Hubungan Jaringan Sekolah (Delete Records Otoritas)
+   */
+  function eksekusiHapusSekolah(idSekolah, namaSekolah) {
+    var konfirmasiMaksimal = confirm(`⚠️ PERINGATAN SISTEM INTEGRASI!\n\nApakah Anda benar-benar ingin memutuskan hubungan instansi:\n[ ${namaSekolah} (${idSekolah}) ]?\n\nTindakan ini akan mencabut izin login operator sekolah tersebut dan mengisolasi database cabang dari Master portal.`);
+    
+    if (konfirmasiMaksimal) {
+      google.script.run
+        .withSuccessHandler(function(res) { 
+          alert(res.message); 
+          muatTabelSuperadminSekolah(); 
+        })
+        .withFailureHandler(function(err) {
+          alert("Gagal mengeksekusi perintah hapus: " + err.message);
+        })
+        .hapusSekolahMitra(idSekolah);
+    }
+  }
+</script>
