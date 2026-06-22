@@ -1,6 +1,6 @@
-# SPMB Online - Portal Pendaftaran Berbasis Google Drive
+# SPMB Cloud System v2.6 - Portal Pendaftaran Berbasis Google Drive
 
-Aplikasi SPMB Online adalah platform pendaftaran siswa terintegrasi yang memanfaatkan Google Drive sebagai backend penyimpanan data. Aplikasi ini dirancang untuk memudahkan proses seleksi penerimaan siswa baru dengan sistem yang terstruktur dan user-friendly.
+Aplikasi SPMB Cloud System v2.6 adalah platform pendaftaran siswa terintegrasi yang memanfaatkan Google Drive sebagai backend penyimpanan data. Aplikasi ini dirancang untuk memudahkan proses seleksi penerimaan siswa baru dengan sistem yang terstruktur dan user-friendly.
 
 ## 📋 Deskripsi Aplikasi
 
