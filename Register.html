@@ -3,17 +3,22 @@
     <div class="col-md-8 col-lg-6">
       <div class="card border-0 shadow rounded-4 p-3 bg-white">
         <div class="card-body">
+          
           <div class="text-center mb-4">
-            <div class="display-6 text-success mb-2"><i class="bi bi-person-plus-fill"></i></div>
+            <div class="display-6 text-success mb-2">
+              <i class="bi bi-person-plus-fill"></i>
+            </div>
             <h3 class="fw-bold m-0">Pendaftaran Akun Siswa</h3>
             <p class="text-muted small">Buat akun mandiri pendaftar siswa baru</p>
           </div>
           
           <form id="formRegistrasi" onsubmit="eksekusiRegistrasiSiswa(event)">
+            
             <div class="mb-3">
               <label class="form-label fw-bold small">Nama Lengkap Calon Siswa</label>
-              <input type="text" class="form-control" id="regNama" placeholder="Sesuai Akta Kelahiran / Ijazah" required>
+              <input type="text" class="form-control" id="regNama" placeholder="Sesuai Akta Kelahiran / Ijazah" oninput="this.value = this.value.toUpperCase()" required>
             </div>
+            
             <div class="mb-3">
               <label class="form-label fw-bold small">NISN (Nomor Induk Siswa Nasional)</label>
               <input type="text" class="form-control" id="regNisn" placeholder="Masukkan 10 digit NISN aktif" maxlength="10" pattern="[0-9]{10}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
@@ -35,34 +40,66 @@
             <div class="row mb-3">
               <div class="col-sm-6 mb-3 mb-sm-0">
                 <label class="form-label fw-bold small">Buat Kata Sandi</label>
-                <input type="password" class="form-control" id="regPass" placeholder="Minimal 6 karakter" required>
+                <div class="input-group">
+                  <span class="input-group-text bg-white text-muted"><i class="bi bi-lock"></i></span>
+                  <input type="password" class="form-control border-end-0" id="regPass" placeholder="Minimal 6 karakter" required>
+                  <button class="btn btn-outline-secondary border-start-0 bg-white text-muted" type="button" onclick="togglePasswordVisibility(this)">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                </div>
               </div>
               <div class="col-sm-6">
                 <label class="form-label fw-bold small">Konfirmasi Kata Sandi</label>
-                <input type="password" class="form-control" id="regPassKonfirm" placeholder="Ulangi kata sandi" required>
+                <div class="input-group">
+                  <span class="input-group-text bg-white text-muted"><i class="bi bi-lock"></i></span>
+                  <input type="password" class="form-control border-end-0" id="regPassKonfirm" placeholder="Ulangi kata sandi" required>
+                  <button class="btn btn-outline-secondary border-start-0 bg-white text-muted" type="button" onclick="togglePasswordVisibility(this)">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                </div>
               </div>
             </div>
             
             <div class="mb-4 p-3 bg-light rounded-3 border">
               <label class="form-label fw-bold small text-success d-block">Verifikasi Keamanan (Anti-Bot)</label>
               <div class="d-flex align-items-center gap-3 mb-2">
-                <div class="bg-secondary text-white fw-bold px-3 py-2 rounded fs-5 tracking-widest text-center shadow-xs select-none" id="boxCaptchaDisplay" style="font-family: monospace; min-width: 120px; letter-spacing: 3px;">-</div>
+                <div class="bg-secondary text-white fw-bold px-3 py-2 rounded fs-5 tracking-widest text-center shadow-xs user-select-none" id="boxCaptchaDisplay" style="font-family: monospace; min-width: 120px; letter-spacing: 3px;">-</div>
                 <button type="button" class="btn btn-outline-secondary btn-sm" onclick="muatUlangCaptcha()" title="Ganti Kode"><i class="bi bi-arrow-clockwise"></i></button>
               </div>
               <input type="text" class="form-control" id="regCaptchaInput" placeholder="Ketik kode di atas menggunakan huruf besar" required>
             </div>
             
             <div id="regFeedback" class="alert alert-danger d-none text-center small py-2 rounded-3"></div>
+
             <button type="submit" id="btnSubmitReg" class="btn btn-success w-100 py-2 rounded-3 fw-bold shadow-sm">
-              <span id="regSpinner" class="spinner-border spinner-border-sm d-none"></span> Registrasi Sekarang
+              <span id="regSpinner" class="spinner-border spinner-border-sm d-none me-2"></span> Registrasi Sekarang
             </button>
-          </form>
+          </form> 
           
           <div class="text-center mt-4 border-top pt-3">
-            <a href="javascript:void(0)" class="text-decoration-none small text-secondary" onclick="switchHalaman('landing-page')"><i class="bi bi-arrow-left"></i> Kembali</a>
+            <a href="javascript:void(0)" class="text-decoration-none small text-secondary" onclick="switchHalaman('landing-page')">
+              <i class="bi bi-arrow-left me-1"></i> Kembali
+            </a>
+            
             <span class="text-muted mx-2">|</span>
-            <a href="javascript:void(0)" class="text-decoration-none small text-dark fw-bold" onclick="switchHalaman('login-page')">Sudah Punya Akun? Login</a>
+            
+            <a href="javascript:void(0)" 
+               class="text-decoration-none small text-dark fw-bold" 
+               onclick="
+                 switchHalaman('landing-page'); 
+                 setTimeout(function(){ 
+                   var formLog = document.getElementById('formLoginSiswa');
+                   if(formLog) {
+                     var inp = formLog.querySelector('input'); 
+                     if(inp) inp.focus(); 
+                     formLog.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                   }
+                 }, 250);
+               ">
+              Sudah Punya Akun? Login
+            </a>
           </div>
+
         </div>
       </div>
     </div>
@@ -71,27 +108,44 @@
 
 <script>
 /**
- * ENGINE 4: SCRIPT KONTROLLER FORM REGISTER & CAPTCHA
+ * ENGINE 4: SCRIPT KONTROLLER FORM REGISTER & CAPTCHA MANDIRI (KAPITAL)
  */
 function bukaHalamanRegister() {
   switchHalaman('page-register');
   muatOpsiSekolahDatabase();
-  muatUlangCaptcha();
+  
+  // Munculkan captcha instan secara mandiri
+  setTimeout(function() {
+    muatUlangCaptcha();
+  }, 150);
 }
 
+// 🌟 FIX UTAMA: Generator Captcha Mandiri di Sisi Client (Huruf Kapital Semua & Anti-Bot Lemot)
 function muatUlangCaptcha() {
-  google.script.run
-    .withSuccessHandler(function(text) {
-      globalCaptchaStr = text;
-      document.getElementById('boxCaptchaDisplay').innerText = text;
-      document.getElementById('regCaptchaInput').value = "";
-    })
-    .generateCaptchaLokal();
+  console.log("Meracik kode keamanan captcha kapital...");
+  
+  // Hanya menggunakan huruf besar/kapital, angka, tanpa karakter ambigu (O, 0, I, l)
+  var karakter = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; 
+  var hasil = "";
+  
+  for (var i = 0; i < 5; i++) {
+    hasil += karakter.charAt(Math.floor(Math.random() * karakter.length));
+  }
+  
+  // Mengunci token captcha di scope window global browser (Kapital)
+  globalCaptchaStr = hasil.toUpperCase();
+  
+  var boxCaptcha = document.getElementById('boxCaptchaDisplay');
+  if (boxCaptcha) {
+    boxCaptcha.innerText = globalCaptchaStr;
+    console.log("Captcha Kapital Siap: " + globalCaptchaStr);
+  }
+  
+  var inputCap = document.getElementById('regCaptchaInput');
+  if (inputCap) inputCap.value = "";
 }
 
-/**
- * FIXED ENGINE: Ditambahkan efek animasi loading pada tombol refresh saat sinkronisasi data sheet
- */
+// Sinkronisasi Memuat Dropdown Cabang Sekolah Berdasarkan Status "Aktif" di Master
 function muatOpsiSekolahDatabase() {
   var sel = document.getElementById('regSekolahSelect');
   var btn = document.getElementById('btnRefreshSekolah');
@@ -100,7 +154,6 @@ function muatOpsiSekolahDatabase() {
 
   if (!sel) return;
 
-  // Set status loading visual pada input select dan tombol
   sel.innerHTML = '<option value="" disabled selected>⏳ Memuat ulang daftar sekolah mitra...</option>';
   if (btn) btn.disabled = true;
   if (icon) icon.classList.add('d-none');
@@ -108,22 +161,37 @@ function muatOpsiSekolahDatabase() {
 
   if (typeof google !== 'undefined' && google.script && google.script.run) {
     google.script.run
-      .withSuccessHandler(function(arr) {
-        // Kembalikan status tombol semula
+      .withSuccessHandler(function(res) {
         if (btn) btn.disabled = false;
         if (icon) icon.classList.remove('d-none');
         if (spinner) spinner.classList.add('d-none');
 
         sel.innerHTML = '<option value="" disabled selected>-- Pilih Sekolah Yang Dituju --</option>';
+        
+        var arr = [];
+        if (Array.isArray(res)) {
+          arr = res;
+        } else if (res && res.data && Array.isArray(res.data)) {
+          arr = res.data;
+        }
+
         if (arr && arr.length > 0) {
           var countAktif = 0;
           arr.forEach(function(s) {
-            var statusDb = s.status || s.Status || "";
-            if (statusDb.toString().trim().toLowerCase() === "aktif") {
-              sel.innerHTML += `<option value="${s.id_sekolah}">${s.nama_sekolah} (${s.npsn})</option>`;
+            var idSekolah = s.id_sekolah || s.ID_Sekolah || s[0] || "";
+            var namaSekolah = s.nama_sekolah || s.Nama_Sekolah || s[1] || "";
+            var npsn = s.npsn || s.NPSN || s[2] || "";
+            var statusDb = s.status || s.Status || s[5] || "";
+
+            if (!idSekolah) return;
+
+            if (statusDb.toString().trim().toLowerCase() === "aktif" || statusDb === "") {
+              var label = npsn ? namaSekolah + " (" + npsn + ")" : namaSekolah;
+              sel.innerHTML += '<option value="' + idSekolah + '">' + label + '</option>';
               countAktif++;
             }
           });
+          
           if (countAktif === 0) {
             sel.innerHTML = '<option value="" disabled>⚠️ Tidak ada sekolah mitra aktif saat ini</option>';
           }
@@ -132,14 +200,12 @@ function muatOpsiSekolahDatabase() {
         }
       })
       .withFailureHandler(function(err) {
-        // Kembalikan status tombol semula meskipun gagal terhubung ke cloud
         if (btn) btn.disabled = false;
         if (icon) icon.classList.remove('d-none');
         if (spinner) spinner.classList.add('d-none');
-        
-        sel.innerHTML = `<option value="" disabled>❌ Gagal memuat data server: ${err.message}</option>`;
+        sel.innerHTML = '<option value="" disabled>❌ Gagal memuat data server: ' + err.message + '</option>';
       })
-      .ambilSemuaSekolahMitra();
+      .ambilSemuaSekolahMitra(); 
   } else {
     if (btn) btn.disabled = false;
     if (icon) icon.classList.remove('d-none');
@@ -149,14 +215,125 @@ function muatOpsiSekolahDatabase() {
 }
 
 function eksekusiRegistrasiSiswa(e) {
+  if (e && typeof e.preventDefault === "function") {
+    e.preventDefault();
+  }
+  
+  console.log("📝 Memulai enkapsulasi data registrasi siswa baru...");
+  
+  var fdb = document.getElementById('regFeedback');
+  var pass = document.getElementById('regPass').value;
+  var konfirm = document.getElementById('regPassKonfirm').value;
+  
+  // Ambil input captcha dan bersihkan lewat Global Sanitizer
+  var cInput = ambilTeksInput('regCaptchaInput').toUpperCase(); 
+  var idSekolahPilihan = document.getElementById('regSekolahSelect').value;
+  
+  if (fdb) fdb.classList.add('d-none');
+  
+  if (pass !== konfirm) { 
+    if (fdb) {
+      fdb.innerText = "Kata sandi konfirmasi tidak cocok!";
+      fdb.classList.remove('d-none');
+    } else { alert("Kata sandi konfirmasi tidak cocok!"); }
+    return; 
+  }
+  
+  // Validasi Captcha Sisi Depan
+  if (cInput !== globalCaptchaStr) {
+    if (fdb) {
+      fdb.innerText = "Kode Verifikasi Keamanan (Captcha) salah atau tidak cocok!";
+      fdb.classList.remove('d-none');
+    } else { alert("Kode Captcha salah!"); }
+    muatUlangCaptcha(); 
+    return;
+  }
+  
+  var bReg = document.getElementById('btnSubmitReg');
+  var spinReg = document.getElementById('regSpinner');
+  if (bReg) bReg.disabled = true; 
+  if (spinReg) spinReg.classList.remove('d-none');
+  
+  // =========================================================================
+  // 🔥 STRATEGI FRONTEND: PAKSA NISN JADI TEKS MURNI (ANTI SIKAT NOL)
+  // =========================================================================
+  var dataReg = {
+    nama: ambilTeksInput('regNama').toUpperCase(), 
+    username: ambilTeksInput('regNisn'), // Mengunci NISN murni sebagai string
+    id_sekolah: idSekolahPilihan,
+    password: pass
+  };
+  
+  if (dataReg.username === "" || dataReg.username.length < 10) {
+    alert("⚠️ Peringatan: NISN wajib diisi 10 digit secara lengkap!");
+    if (bReg) bReg.disabled = false; 
+    if (spinReg) spinReg.classList.add('d-none');
+    return;
+  }
+  
+  if (typeof google !== 'undefined' && google.script && google.script.run) {
+    google.script.run
+      .withSuccessHandler(function(res) {
+        if (bReg) bReg.disabled = false; 
+        if (spinReg) spinReg.classList.add('d-none');
+        
+        if (res && res.status === "success") {
+          alert("✓ REGISTRASI BERHASIL!\n\nAkun dengan NISN " + dataReg.username + " telah aktif.\nSilakan masuk pada portal utama.");
+          document.getElementById('formRegistrasi').reset();
+          switchHalaman('login-page');
+        } else {
+          // Menangkap error jika NISN sudah terdaftar dari server backend
+          if (fdb) {
+            fdb.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-1"></i> ${res.message || 'Gagal memproses akun.'}`; 
+            fdb.classList.remove('d-none');
+          } else { alert("Gagal: " + res.message); }
+          muatUlangCaptcha();
+        }
+      })
+      .withFailureHandler(function(err) {
+        if (bReg) bReg.disabled = false; 
+        if (spinReg) spinReg.classList.add('d-none');
+        if (fdb) {
+          fdb.innerText = "Error Jaringan Cloud: " + err.message;
+          fdb.classList.remove('d-none');
+        } else { alert("Error Jaringan Cloud: " + err.message); }
+        muatUlangCaptcha();
+      })
+      .daftarAkunSiswa(dataReg, cInput, globalCaptchaStr);
+  } else {
+    if (bReg) bReg.disabled = false; 
+    if (spinReg) spinReg.classList.add('d-none');
+    alert("Koneksi API Google App Script Terputus!");
+  }
+}
+/**
+function eksekusiRegistrasiSiswa(e) {
   e.preventDefault();
   var fdb = document.getElementById('regFeedback');
   var pass = document.getElementById('regPass').value;
   var konfirm = document.getElementById('regPassKonfirm').value;
-  var cInput = document.getElementById('regCaptchaInput').value;
+  var cInput = document.getElementById('regCaptchaInput').value.trim().toUpperCase(); // 🌟 Input pendaftar auto-kapital saat divalidasi
+  var idSekolahPilihan = document.getElementById('regSekolahSelect').value;
   
   if (fdb) fdb.classList.add('d-none');
-  if (pass !== konfirm) { alert("Kata sandi konfirmasi tidak cocok!"); return; }
+  
+  if (pass !== konfirm) { 
+    if (fdb) {
+      fdb.innerText = "Kata sandi konfirmasi tidak cocok!";
+      fdb.classList.remove('d-none');
+    } else { alert("Kata sandi konfirmasi tidak cocok!"); }
+    return; 
+  }
+  
+  // 🌟 Validasi Captcha Sisi Depan (Case Insensitive karena keduanya sudah dikapitalisasi)
+  if (cInput !== globalCaptchaStr) {
+    if (fdb) {
+      fdb.innerText = "Kode Verifikasi Keamanan (Captcha) salah atau tidak cocok!";
+      fdb.classList.remove('d-none');
+    } else { alert("Kode Captcha salah!"); }
+    muatUlangCaptcha(); // Acak ulang kode baru
+    return;
+  }
   
   var bReg = document.getElementById('btnSubmitReg');
   var spinReg = document.getElementById('regSpinner');
@@ -164,9 +341,9 @@ function eksekusiRegistrasiSiswa(e) {
   if (spinReg) spinReg.classList.remove('d-none');
   
   var dataReg = {
-    nama: document.getElementById('regNama').value.trim(),
+    nama: document.getElementById('regNama').value.trim().toUpperCase(), 
     username: document.getElementById('regNisn').value.trim(),
-    id_sekolah: document.getElementById('regSekolahSelect').value,
+    id_sekolah: idSekolahPilihan,
     password: pass
   };
   
@@ -175,6 +352,7 @@ function eksekusiRegistrasiSiswa(e) {
       .withSuccessHandler(function(res) {
         if (bReg) bReg.disabled = false; 
         if (spinReg) spinReg.classList.add('d-none');
+        
         if (res && res.status === "success") {
           alert("✓ Registrasi Berhasil!\nSilakan login menggunakan NISN dan Password Anda.");
           document.getElementById('formRegistrasi').reset();
@@ -190,9 +368,32 @@ function eksekusiRegistrasiSiswa(e) {
       .withFailureHandler(function(err) {
         if (bReg) bReg.disabled = false; 
         if (spinReg) spinReg.classList.add('d-none');
-        alert("Error Jaringan Cloud: " + err.message);
+        if (fdb) {
+          fdb.innerText = "Error Jaringan Cloud: " + err.message;
+          fdb.classList.remove('d-none');
+        } else { alert("Error Jaringan Cloud: " + err.message); }
+        muatUlangCaptcha();
       })
       .daftarAkunSiswa(dataReg, cInput, globalCaptchaStr);
+  } else {
+    if (bReg) bReg.disabled = false; 
+    if (spinReg) spinReg.classList.add('d-none');
+    alert("Koneksi API Google App Script Terputus!");
   }
+} 
+*/
+function ambilTeksInput(idElemen) {
+  var elemen = document.getElementById(idElemen);
+  if (!elemen) {
+    console.warn("⚠️ Global Sanitizer: Elemen ID '" + idElemen + "' tidak ditemukan di HTML.");
+    return "";
+  }
+  
+  var nilaiMentah = elemen.value;
+  if (nilaiMentah === null || nilaiMentah === undefined) return "";
+  
+  // Paksa jadi string teks murni dan buang spasi hantu di ujungnya
+  return nilaiMentah.toString().trim();
 }
+
 </script>
