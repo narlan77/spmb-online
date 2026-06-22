@@ -13,7 +13,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
   <style>
-    /* 1. Core Styling */
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
       background-color: #f8fafc;
@@ -21,31 +20,25 @@
       overflow-x: hidden;
       font-size: 0.9rem;
     }
-
     .navbar-brand-custom { 
       font-weight: 700; 
       letter-spacing: -0.5px; 
       font-size: 1.1rem;
     }
-
     .page-content { 
       transition: all 0.3s ease-in-out; 
     }
-
     .section-container {
       padding: 40px 0;
       position: relative;
     }
-
     .slide-title-custom {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 700;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
       border-left: 6px solid #198754;
       padding-left: 12px;
     }
-
-    /* Dynamic Tiles - Compact Version */
     .feature-tile {
       background: white;
       border-radius: 16px;
@@ -67,20 +60,19 @@
       font-size: 1.1rem;
       font-weight: 700;
     }
-
-    /* Card Custom Landing */
     .card-custom {
       border: none;
       border-radius: 16px;
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
       background-color: #ffffff;
     }
-
-    /* Timeline Steps - Compact Version */
     .timeline-box {
       position: relative;
-      padding: 10px;
+      padding: 15px 10px;
       text-align: center;
+      background: #1e293b;
+      border-radius: 12px;
+      border: 1px solid #334155;
     }
     .step-number {
       width: 40px;
@@ -96,8 +88,6 @@
       font-size: 1rem;
       box-shadow: 0 4px 8px rgba(25, 135, 84, 0.2);
     }
-
-    /* Pusat Bantuan Pop-Up Styling */
     .btn-help-center {
       position: fixed;
       bottom: 20px;
@@ -112,13 +102,11 @@
       align-items: center;
       gap: 8px;
     }
-
     .modal-content-custom {
       border-radius: 20px;
       border: none;
       padding: 10px;
     }
-
     .help-item {
       display: flex;
       align-items: center;
@@ -139,12 +127,9 @@
       color: #198754; 
       margin-right: 12px; 
     }
-
     .text-xs {
       font-size: 0.78rem;
     }
-
-    /* Control Cetak (Print CSS) */
     @media print {
       body * { visibility: hidden; }
       #page-dash-adminsekolah, #page-dash-adminsekolah * { visibility: visible; }
@@ -153,343 +138,569 @@
       table { border-collapse: collapse; width: 100%; }
       th, td { border: 1px solid #000 !important; padding: 6px !important; font-size: 11px !important; }
     }
+    .fw-black {
+      font-weight: 800 !important;
+      letter-spacing: -1px;
+    }
+    .overlay-gradasi {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to right, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0.1) 100%);
+      z-index: 1;
+    }
+    .carousel-caption {
+      z-index: 2;
+      left: 8% !important;
+      right: 8% !important;
+    }
+    .max-w-md {
+      max-width: 550px;
+    }
+    @media (max-width: 768px) {
+      .carousel-inner {
+        height: 320px !important;
+      }
+      .carousel-caption h1 {
+        font-size: 1.6rem !important;
+      }
+      .carousel-caption p {
+        font-size: 0.8rem !important;
+        margin-bottom: 15px !important;
+      }
+      .carousel-caption .btn-lg {
+        padding: 8px 16px !important;
+        font-size: 0.85rem !important;
+      }
+      .overlay-gradasi {
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.5) 100%);
+      }
+    }
   </style>
 </head>
 <body>
 
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm py-2 sticky-top">
-    <div class="container">
-      <a class="navbar-brand navbar-brand-custom text-success" href="javascript:void(0)" onClick="switchHalaman('landing-page')">
-        <i class="bi bi-mortarboard-fill me-1"></i>SPMB <span class="text-white">Online</span>
-      </a>
-      <button class="navbar-toggler border-0 p-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon" style="width: 1.25rem; height: 1.25rem;"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto gap-1 mt-2 mt-lg-0 text-xs">
-          <li class="nav-item"><a class="nav-link text-white fw-bold px-2 py-1" href="#info">Info</a></li>
-          <li class="nav-item"><a class="nav-link text-white fw-bold px-2 py-1" href="#syarat">Syarat</a></li>
-          <li class="nav-item"><a class="nav-link text-white fw-bold px-2 py-1" href="#langkah">Langkah</a></li>
-          <li class="nav-item"><a class="nav-link text-white fw-bold px-2 py-1" href="#kuota-penutup">Kuota</a></li>
-          <li class="nav-item" id="nav-home">
-            <button class="btn btn-success btn-sm rounded-pill px-3 fw-bold w-100 w-lg-auto mt-1 mt-lg-0" onClick="switchHalaman('login-page')">Masuk Sistem</button>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm py-2 sticky-top">
+  <div class="container">
+    <a class="navbar-brand navbar-brand-custom text-success" href="javascript:void(0)" onclick="switchHalaman('landing-page')">
+      <i class="bi bi-mortarboard-fill me-1"></i>SPMB <span class="text-white">Online</span>
+    </a>
+    <button class="navbar-toggler border-0 p-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon" style="width: 1.25rem; height: 1.25rem;"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto gap-1 mt-2 mt-lg-0 text-xs">
+        <li class="nav-item"><a class="nav-link text-white fw-bold px-2 py-1" href="#" data-bs-toggle="modal" data-bs-target="#modalInfo">Info</a></li>
+        <li class="nav-item"><a class="nav-link text-white fw-bold px-2 py-1" href="#" data-bs-toggle="modal" data-bs-target="#modalSyarat">Syarat</a></li>
+        <li class="nav-item"><a class="nav-link text-white fw-bold px-2 py-1" href="#" data-bs-toggle="modal" data-bs-target="#modalLangkah">Langkah</a></li>
+        <li class="nav-item"><a class="nav-link text-white fw-bold px-2 py-1" href="#kuota-penutup">Kuota</a></li>
+        <li class="nav-item" id="nav-home">
+          <button class="btn btn-success btn-sm rounded-pill px-3 fw-bold w-100 w-lg-auto mt-1 mt-lg-0" data-bs-toggle="modal" data-bs-target="#modalAksesPPDB">Masuk Sistem</button>
+        </li>
+        <li class="nav-item d-none" id="menu-logout">
+          <button class="btn btn-danger btn-sm rounded-pill px-3 w-100 w-lg-auto mt-1 mt-lg-0" onclick="eksekusiLogout()">
+            <i class="bi bi-box-arrow-right me-1"></i> Keluar
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<section id="hero-slider" class="my-4">
+  <div id="ppdbCarousel" class="carousel slide carousel-fade shadow-sm rounded-4 overflow-hidden mx-auto" data-bs-ride="carousel" style="max-width: 95%;">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#ppdbCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#ppdbCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#ppdbCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+
+    <div class="carousel-inner" style="height: 400px;">
+      <div class="carousel-item active" data-bs-interval="4000">
+        <div class="overlay-gradasi"></div>
+        <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1200&auto=format&fit=crop" class="d-block w-100 object-fit-cover h-100" alt="Fasilitas Sekolah">
+        <div class="carousel-caption text-start pb-5 mb-3">
+          <span class="badge bg-success mb-2 px-3 py-2 text-uppercase fw-bold">Pendaftaran Dibuka</span>
+          <h1 class="fw-black text-white display-5 mb-2">Selamat Datang di Portal PPDB Cloud</h1>
+          <p class="fs-6 text-white text-opacity-75 mb-4 max-w-md">Sistem Penerimaan Peserta Didik Baru Terpadu, Cepat, Transparan, dan Real-time untuk Seluruh Sekolah Cabang Mitra.</p>
+          <button class="btn btn-success btn-lg px-4 shadow rounded-pill" data-bs-toggle="modal" data-bs-target="#modalAksesPPDB"><i class="bi bi-person-plus-fill me-2"></i>Daftar Sekarang</button>
+        </div>
+      </div>
+
+      <div class="carousel-item" data-bs-interval="4000">
+        <div class="overlay-gradasi"></div>
+        <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?q=80&w=1200&auto=format&fit=crop" class="d-block w-100 object-fit-cover h-100" alt="Aktivitas Belajar">
+        <div class="carousel-caption text-start pb-5 mb-3">
+          <span class="badge bg-primary mb-2 px-3 py-2 text-uppercase fw-bold">Program Unggulan</span>
+          <h1 class="fw-black text-white display-5 mb-2">Mendukung Jalur Afirmasi KIP</h1>
+          <p class="fs-6 text-white text-opacity-75 mb-4 max-w-md">Kini unggah berkas Kartu Indonesia Pintar (KIP) jauh lebih mudah lewat dashboard mandiri siswa untuk dapatkan beasiswa penuh.</p>
+          <a href="#kuota-penutup" class="btn btn-primary btn-lg px-4 shadow rounded-pill"><i class="bi bi-eye-fill me-2"></i>Cek Sisa Kuota</a>
+        </div>
+      </div>
+
+      <div class="carousel-item" data-bs-interval="4000">
+        <div class="overlay-gradasi"></div>
+        <img src="https://images.unsplash.com/photo-1546410531-bb4caa6b424d?q=80&w=1200&auto=format&fit=crop" class="d-block w-100 object-fit-cover h-100" alt="Gedung Sekolah">
+        <div class="carousel-caption text-start pb-5 mb-3">
+          <span class="badge bg-warning text-dark mb-2 px-3 py-2 text-uppercase fw-bold">Seleksi Digital</span>
+          <h1 class="fw-black text-white display-5 mb-2">Pantau Hasil Secara Real-time</h1>
+          <p class="fs-6 text-white text-opacity-75 mb-4 max-w-md">Validasi dokumen dilakukan langsung oleh panitia pusat. Unduh SK kelulusan dan Pakta Integritas langsung setelah dinyatakan diterima.</p>
+          <button class="btn btn-warning text-dark btn-lg px-4 shadow rounded-pill" data-bs-toggle="modal" data-bs-target="#helpModal"><i class="bi bi-headset me-2"></i>Hubungi Helpdesk</button>
+        </div>
+      </div>
+    </div>
+
+    <button class="carousel-control-prev" type="button" data-bs-target="#ppdbCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon p-3 bg-dark bg-opacity-25 rounded-circle" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#ppdbCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon p-3 bg-dark bg-opacity-25 rounded-circle" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</section>
+
+<div class="container-fluid p-0">
+  <div id="landing-page" class="page-content">
+    
+    <section class="section-container bg-white py-2">
+      <div class="container">
+        <div class="row align-items-center g-4 justify-content-center">
+          
+          <div class="col-lg-6 text-center text-lg-start my-auto">
+            <span class="badge bg-success-subtle text-success fw-bold px-3 py-2 text-sm rounded-pill mb-4">
+              Penerimaan Siswa Baru 2026
+            </span>
+            <div id="textSlideSPMB" class="carousel slide" data-bs-ride="carousel">
+              <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <h1 class="fs-1 display-5 fw-bold mb-3">Masa Depan Digital<br><span class="text-success">Dimulai dari Sini.</span></h1>
+                  <p class="text-muted lead mb-4">Portal SPMB Terintegrasi. Daftarkan diri secara mandiri, unggah berkas digital, dan pantau kelulusan secara transparan.</p>
+                </div>
+                <div class="carousel-item">
+                  <h1 class="fs-1 display-5 fw-bold mb-3">Proses Seleksi<br><span class="text-success">Cepat & Akurat.</span></h1>
+                  <p class="text-muted lead mb-4">Sistem penilaian otomatis yang transparan, memberikan hasil yang jujur dan dapat dipantau secara real-time.</p>
+                </div>
+                <div class="carousel-item">
+                  <h1 class="fs-1 display-5 fw-bold mb-3">Grup & Komunitas<br><span class="text-success">Siap Membantu.</span></h1>
+                  <p class="text-muted lead mb-4">Layanan bantuan operator sekolah dan panitia PMB yang responsif selama proses pendaftaran berlangsung.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-5">
+            <div class="card border-0 shadow-lg p-4 rounded-4 bg-light">
+              <h4 class="fw-bold mb-1">Selamat Datang</h4>
+              <p class="text-muted text-xs mb-4">Silakan masuk sesuai dengan hak akses Anda.</p>
+              
+              <form id="formLoginSiswa" onsubmit="eksekusiLoginSiswa(event)">
+                <div class="mb-3">
+                  <label for="loginUser" class="form-label fw-bold small">ID Pengguna / NISN / Username</label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-white text-muted"><i class="bi bi-card-text"></i></span>
+                    <input type="text" class="form-control" id="loginUser" placeholder="Masukkan ID atau NISN Anda" required>
+                  </div>
+                </div>
+                <div class="mb-4">
+                  <label for="loginPass" class="form-label fw-bold small">Kata Sandi / Password</label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-white text-muted"><i class="bi bi-lock"></i></span>
+                    <input type="password" class="form-control border-end-0" id="loginPass" placeholder="Masukkan password Anda" required>
+                    <button class="btn btn-outline-secondary border-start-0 bg-white text-muted" type="button" onclick="togglePasswordVisibility(this)">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  </div>
+                </div>
+                
+                <div id="loginFeedback" class="alert alert-danger d-none text-center small py-2 rounded-3" role="alert"></div>
+                
+                <button type="submit" id="btnSubmitLogin" class="btn btn-dark w-100 py-2.5 rounded-3 fw-bold shadow-sm mb-3">
+                  <span id="loginSpinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                  <span><i class="bi bi-box-arrow-in-right me-1"></i> Masuk Ke Sistem</span>
+                </button>
+
+                <div id="notifBrowser" class="alert alert-warning border-warning-subtle rounded-3 mt-2 shadow-sm d-none" style="font-size: 13px;">
+                  <div class="d-flex gap-2">
+                    <i class="bi bi-exclamation-triangle-fill text-warning fs-5"></i>
+                    <div>
+                      <strong class="text-dark d-block mb-1">Pengguna Safari / HP Bawaan?</strong>
+                      <span class="text-muted">Jika tombol login tidak merespon, mohon gunakan browser <strong>Google Chrome</strong>.</span>
+                    </div>
+                  </div>
+                </div>
+              </form>
+              
+              <div class="text-center mt-2">
+                <button class="btn btn-success rounded-pill px-4 py-2 w-100 fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalAksesPPDB">
+                  <i class="bi bi-person-plus-fill me-1"></i> Belum Punya Akun? Daftar Baru
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <section id="kuota-penutup" class="section-container" style="background-color: #f8fafc; border-top: 1px solid #e2e8f0;">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-11">
+            <div class="card card-custom p-4 shadow-sm">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="bg-success bg-opacity-10 p-2 rounded-3 text-success fs-5 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                    <i class="bi bi-building-gear"></i>
+                  </div>
+                  <div>
+                    <h5 class="fw-bold text-dark mb-0">Informasi Kuota Sekolah</h5>
+                    <small class="text-muted">Ringkasan Sisa Kapasitas Pendaftaran Aktual Secara Real-time</small>
+                  </div>
+                </div>
+                <button class="btn btn-light btn-xs text-success rounded-circle shadow-sm p-1.5" onclick="muatKuotaLandingPage()" title="Segarkan Kuota">
+                  <i class="bi bi-arrow-clockwise fs-6"></i>
+                </button>
+              </div>
+              
+              <div class="table-responsive rounded-3 border">
+                <table class="table table-hover align-middle mb-0" style="font-size: 0.88rem;">
+                  <thead class="table-light">
+                    <tr>
+                      <th class="ps-3 py-3">Nama Sekolah</th>
+                      <th class="text-center" style="width: 150px;">Total Kuota</th>
+                      <th class="text-center" style="width: 150px;">Sisa Kuota</th>
+                    </tr>
+                  </thead>
+                  <tbody id="bodiTabelKuotaLanding">
+                    <tr>
+                      <td colspan="3" class="text-center py-5 text-muted">
+                        <span class="spinner-border spinner-border-sm text-success me-2"></span>Menghubungkan ke pusat server master data kuota...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="container my-4">
+    <?!= include('Login'); ?>
+    <?!= include('Register'); ?>
+    <?!= include('dashSuperAdmin'); ?>
+    <?!= include('dashAdminSekolah'); ?>
+    <?!= include('dashSiswa'); ?>
+  </div>
+</div>
+
+<button class="btn btn-success btn-help-center shadow" data-bs-toggle="modal" data-bs-target="#helpModal">
+  <i class="fa-solid fa-circle-question fs-5"></i> Pusat Bantuan
+</button>
+
+<div class="modal fade" id="modalInfo" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content modal-content-custom">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="fw-bold m-0 text-dark"><i class="bi bi-info-circle-fill text-success me-2"></i>Informasi Pelaksanaan Seleksi</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body py-3">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <div class="feature-tile shadow-sm">
+              <i class="fa-solid fa-calendar-check"></i>
+              <h3>Jadwal Seleksi</h3>
+              <p class="text-xs text-muted mb-0">Pendaftaran dibuka mulai <strong>1 Juni - 10 Juni 2026</strong>. Pastikan tidak melewati batas waktu.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature-tile shadow-sm">
+              <i class="fa-solid fa-map-location-dot"></i>
+              <h3>Sistem Zonasi</h3>
+              <p class="text-xs text-muted mb-0">Prioritas diberikan kepada pendaftar yang berada dalam radius wilayah sekolah setempat.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature-tile shadow-sm">
+              <i class="fa-solid fa-clock-rotate-left"></i>
+              <h3>Update Real-time</h3>
+              <p class="text-xs text-muted mb-0">Status berkas oleh panitia dapat langsung dipantau berkala melalui dashboard siswa.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalSyarat" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content modal-content-custom">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="fw-bold m-0 text-dark"><i class="bi bi-file-earmark-text-fill text-success me-2"></i>Berkas Persyaratan Dokumen</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body py-3">
+        <ul class="list-unstyled text-xs p-0 m-0">
+          <li class="mb-3 d-flex align-items-start">
+            <i class="bi bi-check-circle-fill text-success fs-5 me-2 mt-1"></i>
+            <div>
+              <h6 class="fw-bold mb-0">Dokumen Identitas</h6>
+              <p class="text-muted mb-0">Scan asli Kartu Keluarga (KK) dan Akta Kelahiran (Format PDF/JPG/PNG).</p>
+            </div>
           </li>
-          <li class="nav-item d-none" id="menu-logout">
-            <button class="btn btn-danger btn-sm rounded-pill px-3 w-100 w-lg-auto mt-1 mt-lg-0" onclick="eksekusiLogout()">
-              <i class="bi bi-box-arrow-right me-1"></i> Keluar
-            </button>
+          <li class="mb-3 d-flex align-items-start">
+            <i class="bi bi-check-circle-fill text-success fs-5 me-2 mt-1"></i>
+            <div>
+              <h6 class="fw-bold mb-0">Dokumen Akademik</h6>
+              <p class="text-muted mb-0">Ijazah asli atau Surat Keterangan Lulus (SKL) resmi dari instansi sekolah asal.</p>
+            </div>
+          </li>
+          <li class="mb-3 d-flex align-items-start">
+            <i class="bi bi-check-circle-fill text-success fs-5 me-2 mt-1"></i>
+            <div>
+              <h6 class="fw-bold mb-0">Data Validasi NISN</h6>
+              <p class="text-muted mb-0">Memiliki nomor NISN aktif yang terverifikasi sinkron di database Kemdikbud.</p>
+            </div>
           </li>
         </ul>
-      </div>
-    </div>
-  </nav>
-
-  <div class="container-fluid p-0">
-    
-    <div id="landing-page" class="page-content">
-      
-      <section class="section-container bg-white py-4">
-        <div class="container">
-          <div class="row align-items-center g-4">
-            
-            <div class="col-lg-7 text-center text-lg-start my-auto">
-              <span class="badge bg-success-subtle text-success fw-bold px-3 py-2 text-sm rounded-pill mb-4">
-                Penerimaan Siswa Baru 2026
-              </span>
-              
-              <div id="textSlideSPMB" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                  <div class="carousel-item active">
-                    <h1 class="fs-1 display-5 fw-bold mb-3">Masa Depan Digital<br><span class="text-success">Dimulai dari Sini.</span></h1>
-                    <p class="text-muted lead mb-4">Portal SPMB Terintegrasi. Daftarkan diri secara mandiri, unggah berkas digital, dan pantau kelulusan secara transparan.</p>
-                  </div>
-                  <div class="carousel-item">
-                    <h1 class="fs-1 display-5 fw-bold mb-3">Proses Seleksi<br><span class="text-success">Cepat & Akurat.</span></h1>
-                    <p class="text-muted lead mb-4">Sistem penilaian otomatis yang transparan, memberikan hasil yang jujur dan dapat dipantau secara real-time.</p>
-                  </div>
-                  <div class="carousel-item">
-                    <h1 class="fs-1 display-5 fw-bold mb-3">Grup & Komunitas<br><span class="text-success">Siap Membantu.</span></h1>
-                    <p class="text-muted lead mb-4">Layanan bantuan operator sekolah dan panitia PMB yang responsif selama proses pendaftaran berlangsung.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-lg-5">
-              <div class="card border-0 shadow-lg p-4 rounded-4">
-                <h4 class="fw-bold mb-1">Selamat Datang</h4>
-                <p class="text-muted text-xs mb-4">Silakan masuk sesuai dengan hak akses Anda.</p>
-                
-                <form id="formLoginSiswa" onsubmit="eksekusiLoginSiswa(event)">
-                  <div class="mb-3">
-                    <label for="loginUser" class="form-label fw-bold small">ID Pengguna / NISN / Username</label>
-                    <div class="input-group">
-                      <span class="input-group-text bg-light text-muted"><i class="bi bi-card-text"></i></span>
-                      <input type="text" class="form-control" id="loginUser" placeholder="Masukkan ID atau NISN Anda" required>
-                    </div>
-                  </div>
-                  <div class="mb-4">
-                    <label for="loginPass" class="form-label fw-bold small">Kata Sandi / Password</label>
-                    <div class="input-group">
-                      <span class="input-group-text bg-light text-muted"><i class="bi bi-lock"></i></span>
-                      <input type="password" class="form-control border-end-0" id="loginPass" placeholder="Masukkan password Anda" required>
-                      <button class="btn btn-outline-secondary border-start-0 bg-white text-muted" type="button" onclick="togglePasswordVisibility(this)">
-                        <i class="bi bi-eye" id="toggleIconLogin"></i>
-                      </button>
-                    </div>
-                  </div>
-                  
-                  <div id="loginFeedback" class="alert alert-danger d-none text-center small py-2 rounded-3" role="alert"></div>
-                  
-                  <button type="submit" id="btnSubmitLogin" class="btn btn-dark w-100 py-2.5 rounded-3 fw-bold shadow-sm mb-3">
-                    <span id="loginSpinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
-                    <span id="loginBtnText"><i class="bi bi-box-arrow-in-right me-1"></i> Masuk Ke Sistem</span>
-                  </button>
-                </form>
-
-                <button class="btn btn-outline-success w-100 py-2 rounded-pill fw-bold text-xs" onclick="switchHalaman('page-register')">
-                  Belum Punya Akun? Daftar Sekarang
-                </button>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      <section id="info" class="section-container" style="background-color: #f1f5f9;">
-        <div class="container">
-          <h2 class="slide-title-custom">Info Pendaftaran</h2>
-          <div class="row g-3">
-            <div class="col-md-4">
-              <div class="feature-tile">
-                <i class="fa-solid fa-calendar-check"></i>
-                <h3>Jadwal Seleksi</h3>
-                <p class="text-xs text-muted mb-0">Pendaftaran dibuka mulai <strong>1 Juni - 10 Juni 2026</strong>. Pastikan tidak melewati batas waktu.</p>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="feature-tile">
-                <i class="fa-solid fa-map-location-dot"></i>
-                <h3>Sistem Zonasi</h3>
-                <p class="text-xs text-muted mb-0">Prioritas diberikan kepada pendaftar yang berada dalam radius wilayah sekolah setempat.</p>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="feature-tile">
-                <i class="fa-solid fa-clock-rotate-left"></i>
-                <h3>Update Real-time</h3>
-                <p class="text-xs text-muted mb-0">Status berkas oleh panitia dapat langsung dipantau berkala melalui dashboard siswa.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="syarat" class="section-container bg-white">
-        <div class="container">
-          <div class="row align-items-center g-3">
-            <div class="col-lg-6">
-              <h2 class="slide-title-custom">Syarat Pendaftaran</h2>
-              <ul class="list-unstyled text-xs">
-                <li class="mb-3 d-flex align-items-start">
-                  <i class="bi bi-check-circle-fill text-success fs-5 me-2 mt-1"></i>
-                  <div>
-                    <h6 class="fw-bold mb-0">Dokumen Identitas</h6>
-                    <p class="text-muted mb-0">Scan asli Kartu Keluarga (KK) dan Akta Kelahiran (Format PDF/JPG).</p>
-                  </div>
-                </li>
-                <li class="mb-3 d-flex align-items-start">
-                  <i class="bi bi-check-circle-fill text-success fs-5 me-2 mt-1"></i>
-                  <div>
-                    <h6 class="fw-bold mb-0">Dokumen Academic</h6>
-                    <p class="text-muted mb-0">Ijazah atau Surat Keterangan Lulus (SKL) resmi dari sekolah asal.</p>
-                  </div>
-                </li>
-                <li class="mb-3 d-flex align-items-start">
-                  <i class="bi bi-check-circle-fill text-success fs-5 me-2 mt-1"></i>
-                  <div>
-                    <h6 class="fw-bold mb-0">Data NISN</h6>
-                    <p class="text-muted mb-0">Memiliki NISN aktif yang terverifikasi di database Kemdikbud.</p>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="col-lg-6">
-              <div class="bg-success-subtle p-4 rounded-4 text-xs">
-                <h6 class="fw-bold text-success mb-2"><i class="bi bi-info-circle-fill me-1"></i>Catatan Penting</h6>
-                <p class="mb-0">Pastikan semua berkas terbaca jelas (tidak buram). Batas ukuran file maksimal adalah <strong>2MB</strong> per dokumen.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="langkah" class="section-container" style="background-color: #0f172a; color: white;">
-        <div class="container">
-          <h2 class="slide-title-custom text-white border-success">Langkah Pendaftaran</h2>
-          <div class="row g-3 mt-2">
-            <div class="col-6 col-md-3 timeline-box">
-              <div class="step-number">1</div>
-              <h6 class="fw-bold mb-1">Buat Akun</h6>
-              <p class="text-xs text-secondary mb-0">Registrasi mandiri pakai NISN pendaftar.</p>
-            </div>
-            <div class="col-6 col-md-3 timeline-box">
-              <div class="step-number">2</div>
-              <h6 class="fw-bold mb-1">Isi Data</h6>
-              <p class="text-xs text-secondary mb-0">Lengkapi biodata & sekolah tujuan.</p>
-            </div>
-            <div class="col-6 col-md-3 timeline-box">
-              <div class="step-number">3</div>
-              <h6 class="fw-bold mb-1">Upload Berkas</h6>
-              <p class="text-xs text-secondary mb-0">Unggah KK, Akta, SKL versi digital.</p>
-            </div>
-            <div class="col-6 col-md-3 timeline-box">
-              <div class="step-number">4</div>
-              <h6 class="fw-bold mb-1">Verifikasi</h6>
-              <p class="text-xs text-secondary mb-0">Pantau kelulusan melalui dashboard.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="kuota-penutup" class="section-container" style="background-color: #f8fafc; border-top: 1px solid #e2e8f0;">
-        <div class="container">
-          <div class="row justify-content-center">
-            <div class="col-lg-10">
-              <div class="card card-custom p-4 shadow-sm">
-                
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                  <div class="d-flex align-items-center gap-3">
-                    <div class="bg-success bg-opacity-10 p-2 rounded-3 text-success fs-5 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                      <i class="bi bi-building-gear"></i>
-                    </div>
-                    <div>
-                      <h5 class="fw-bold text-dark mb-0">Informasi Kuota Sekolah</h5>
-                      <small class="text-muted">Ringkasan Sisa Kapasitas Pendaftaran Aktual Secara Real-time</small>
-                    </div>
-                  </div>
-                  <button class="btn btn-light btn-xs text-success rounded-circle shadow-sm p-1.5" onClick="muatKuotaLandingPage()" title="Segarkan Kuota">
-                    <i class="bi bi-arrow-clockwise fs-6"></i>
-                  </button>
-                </div>
-                
-                <div class="table-responsive rounded-3 border">
-                  <table class="table table-hover align-middle mb-0" style="font-size: 0.88rem;">
-                    <thead class="table-light">
-                      <tr>
-                        <th class="ps-3 py-3">Nama Sekolah</th>
-                        <th class="text-center" style="width: 150px;">Total Kuota</th>
-                        <th class="text-center" style="width: 150px;">Sisa Kuota</th>
-                      </tr>
-                    </thead>
-                    <tbody id="bodiTabelKuotaLanding">
-                      <tr>
-                        <td colspan="3" class="text-center py-5 text-muted">
-                          <span class="spinner-border spinner-border-sm text-success me-2"></span>Menghubungkan ke pusat server master data kuota...
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-
-    <div class="container my-4">
-      <?!= include('Login'); ?>
-      <?!= include('Register'); ?>
-      <?!= include('dashSuperAdmin'); ?>
-      <?!= include('dashAdminSekolah'); ?>
-      <?!= include('dashSiswa'); ?>
-    </div>
-
-  </div>
-
-  <button class="btn btn-success btn-help-center shadow" data-bs-toggle="modal" data-bs-target="#helpModal">
-    <i class="fa-solid fa-circle-question fs-5"></i> Pusat Bantuan
-  </button>
-
-  <div class="modal fade" id="helpModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-sm modal-md-custom">
-      <div class="modal-content modal-content-custom text-xs">
-        <div class="modal-header border-0 pb-1">
-          <h5 class="fw-bold m-0"><i class="fa-solid fa-headset me-1 text-success"></i> Bantuan</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body pt-2">
-          <p class="text-muted mb-3">Halo! Ada yang bisa kami bantu mengenai sistem pendaftaran?</p>
-          
-          <div class="help-options mb-3">
-            <a href="https://wa.me/628123456789" target="_blank" class="help-item">
-              <i class="fa-brands fa-whatsapp text-success"></i>
-              <div>
-                <h6 class="fw-bold m-0 text-xs">WhatsApp Helpdesk</h6>
-                <p class="text-xs text-muted m-0">Chat Operator (08.00 - 16.00 WIB)</p>
-              </div>
-            </a>
-            <a href="https://drive.google.com/file/d/1ft4XKBCeRYpPWUu1f7QZqeiBTG1ngeAC/view?usp=drive_open" target="_blank" class="help-item">
-              <i class="fa-solid fa-file-pdf text-danger"></i>
-              <div>
-                <h6 class="fw-bold m-0 text-xs">Buku Panduan (PDF)</h6>
-                <p class="text-xs text-muted m-0">Unduh berkas tutorial sistem pendaftaran</p>
-              </div>
-            </a>
-          </div>
-
-          <h6 class="fw-bold mb-2"><i class="fa-solid fa-circle-question text-primary me-1"></i>FAQ Singkat</h6>
-          
-          <div class="accordion accordion-flush border rounded-3 overflow-hidden" id="faqAccordion">
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button collapsed fw-semibold text-xs py-2" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                  NISN tidak terdaftar?
-                </button>
-              </h2>
-              <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                <div class="accordion-body text-muted text-xs">
-                  Pastikan nomor NISN sesuai data Dapodik asal. Jika berkendala hubungi operator sekolah asal atau panitia via WhatsApp.
-                </div>
-              </div>
-            </div>
-
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button collapsed fw-semibold text-xs py-2" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
-                  Batas ukuran file dokumen?
-                </button>
-              </h2>
-              <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                <div class="accordion-body text-muted text-xs">
-                  Maksimal file dokumen adalah <strong>2 MB</strong> format <strong>PDF/JPG/PNG</strong>. Silakan kompres jika berkas terlalu besar.
-                </div>
-              </div>
-            </div>
-          </div>
-
+        <div class="bg-success-subtle p-3 rounded-3 text-xs mt-2">
+          <h6 class="fw-bold text-success mb-1"><i class="bi bi-info-circle-fill me-1"></i>Catatan Kompresi Batas Ukuran File</h6>
+          <p class="mb-0 text-dark">Pastikan semua dokumen dipindai jelas tidak buram. Ukuran kapasitas file maksimal <strong>2 MB</strong> per berkas.</p>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<div class="modal fade" id="modalLangkah" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content bg-dark text-white rounded-4 border-0 p-3">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="fw-bold m-0 text-white"><i class="bi bi-bezier2 text-success me-2"></i>Alur Mekanisme Pendaftaran</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body py-3">
+        <div class="row g-3">
+          <div class="col-6 col-md-3 timeline-box">
+            <div class="step-number">1</div>
+            <h6 class="fw-bold mb-1">Buat Akun</h6>
+            <p class="text-xs text-secondary mb-0">Registrasi mandiri pakai NISN pendaftar.</p>
+          </div>
+          <div class="col-6 col-md-3 timeline-box">
+            <div class="step-number">2</div>
+            <h6 class="fw-bold mb-1">Isi Data</h6>
+            <p class="text-xs text-secondary mb-0">Lengkapi biodata & sekolah tujuan.</p>
+          </div>
+          <div class="col-6 col-md-3 timeline-box">
+            <div class="step-number">3</div>
+            <h6 class="fw-bold mb-1">Upload Berkas</h6>
+            <p class="text-xs text-secondary mb-0">Unggah KK, Akta, SKL versi digital.</p>
+          </div>
+          <div class="col-6 col-md-3 timeline-box">
+            <div class="step-number">4</div>
+            <h6 class="fw-bold mb-1">Verifikasi</h6>
+            <p class="text-xs text-secondary mb-0">Pantau kelulusan melalui dashboard.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-  <script>
+<div class="modal fade" id="modalAksesPPDB" tabindex="-1" aria-labelledby="modalAksesPPDBLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg rounded-4">
+      <div class="modal-header bg-success text-white rounded-top-4 border-0 py-3">
+        <h5 class="modal-title fw-bold" id="modalAksesPPDBLabel">
+          <i class="bi bi-shield-lock-fill me-2"></i>Gerbang Pendaftaran PPDB
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <p class="text-muted small text-center mb-4">Silakan pilih tindakan pendaftaran yang ingin Anda lakukan di bawah ini:</p>
+        <div class="d-grid gap-3">
+          
+          <button class="btn btn-outline-success p-3 text-start rounded-3 shadow-sm transition-all d-flex align-items-center justify-content-between" onclick="bukaHalamanDariModalRegister()">
+            <div class="d-flex align-items-center gap-3">
+              <div class="bg-success bg-opacity-10 p-2 rounded-3 text-success fs-4">
+                <i class="bi bi-person-plus-fill"></i>
+              </div>
+              <div>
+                <strong class="text-dark d-block">Belum Punya Akun? Klik di sini</strong>
+                <small class="text-muted">Klik untuk registrasi & isi formulir awal</small>
+              </div>
+            </div>
+            <i class="bi bi-chevron-right text-muted"></i>
+          </button>
+
+          <button class="btn btn-success p-3 text-start rounded-3 shadow-sm transition-all d-flex align-items-center justify-content-between" 
+                  onclick="
+                    var modalEl = document.getElementById('modalAksesPPDB'); 
+                    if(modalEl) { var inst = bootstrap.Modal.getInstance(modalEl); if(inst) inst.hide(); }
+                    switchHalaman('landing-page'); 
+                    setTimeout(function(){ 
+                      var formLog = document.getElementById('formLoginSiswa');
+                      if(formLog) {
+                        var inp = formLog.querySelector('input'); 
+                        if(inp) inp.focus(); 
+                        formLog.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      }
+                    }, 300);
+                  ">
+            <div class="d-flex align-items-center gap-3">
+              <div class="bg-white bg-opacity-20 p-2 rounded-3 text-white fs-4">
+                <i class="bi bi-box-arrow-in-right"></i>
+              </div>
+              <div>
+                <strong class="text-white d-block">Sudah Daftar / Masuk Dashboard</strong>
+                <small class="text-white text-opacity-75">Lengkapi berkas KK, Akta, SKL & KIP</small>
+              </div>
+            </div>
+            <i class="bi bi-chevron-right text-white"></i>
+          </button>
+
+        </div>
+      </div>
+      <div class="modal-footer border-0 bg-light rounded-bottom-4 py-2 d-flex justify-content-between">
+        <span class="text-muted style-italic" style="font-size: 11px;">SPMB Cloud System v2.6</span>
+        <button type="button" class="btn btn-secondary btn-sm rounded-pill px-3" data-bs-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="helpModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm modal-md-custom">
+    <div class="modal-content modal-content-custom text-xs">
+      <div class="modal-header border-0 pb-1">
+        <h5 class="fw-bold m-0"><i class="fa-solid fa-headset me-1 text-success"></i> Bantuan</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body pt-2">
+        <p class="text-muted mb-3">Halo! Ada yang bisa kami bantu mengenai sistem pendaftaran?</p>
+        <div class="help-options mb-3">
+          <a href="https://wa.me/628123456789" target="_blank" class="help-item">
+            <i class="fa-brands fa-whatsapp text-success"></i>
+            <div>
+              <h6 class="fw-bold m-0 text-xs">WhatsApp Helpdesk</h6>
+              <p class="text-xs text-muted m-0">Chat Operator (08.00 - 16.00 WIB)</p>
+            </div>
+          </a>
+          <a href="https://drive.google.com/file/d/1ft4XKBCeRYpPWUu1f7QZqeiBTG1ngeAC/view?usp=drive_open" target="_blank" class="help-item">
+            <i class="fa-solid fa-file-pdf text-danger"></i>
+            <div>
+              <h6 class="fw-bold m-0 text-xs">Buku Panduan (PDF)</h6>
+              <p class="text-xs text-muted m-0">Unduh berkas tutorial sistem pendaftaran</p>
+            </div>
+          </a>
+        </div>
+
+        <h6 class="fw-bold mb-2"><i class="fa-solid fa-circle-question text-primary me-1"></i>FAQ Singkat</h6>
+        <div class="accordion accordion-flush border rounded-3 overflow-hidden" id="faqAccordion">
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed fw-semibold text-xs py-2" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                NISN tidak terdaftar?
+              </button>
+            </h2>
+            <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body text-muted text-xs">
+                Pastikan nomor NISN sesuai data Dapodik asal. Jika berkendala hubungi operator sekolah asal atau panitia via WhatsApp.
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed fw-semibold text-xs py-2" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                Batas ukuran file dokumen?
+              </button>
+            </h2>
+            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body text-muted text-xs">
+                Maksimal file dokumen adalah <strong>2 MB</strong> format <strong>PDF/JPG/PNG</strong>. Silakan kompres jika berkas terlalu besar.
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
     var sisNisn = "";
     var sisSchId = "";
-    var globalCaptchaStr = "";
+    var globalCaptchaStr = ""; // 🌟 Wadah penyimpan teks Captcha Aktif
     var admSesiRole = "";
     var admSesiSchId = "";
     var admSesiUser = "";
 
-    window.addEventListener("DOMContentLoaded", function() {
-      periksaDanKunciSesiAktif();
+    // =======================================================================
+    // 🌟 INISIALISASI OTOMATIS SAAT HALAMAN PERTAMA KALI DIBUKA
+    // =======================================================================
+    window.addEventListener('DOMContentLoaded', function() {
+      // 1. Muat Informasi Kuota di Landing Page
       muatKuotaLandingPage();
+      
+      // 2. Prefetch: Siapkan Daftar Pilihan Sekolah & Captcha untuk Form Register (Anti-Refresh)
+      siapkanKomponenPendaftaranPusat();
+      
+      // 3. Periksa Sesi Login Aktif
+      periksaDanKunciSesiAktif(); 
+      
+      // 4. Deteksi Browser Non-Chrome
+      var userAgent = navigator.userAgent.toLowerCase();
+      var isChrome = userAgent.includes('chrome') || userAgent.includes('crios');
+      var isSafari = userAgent.includes('safari') && !isChrome; 
+  
+      if (!isChrome || isSafari) {
+        var elNotif = document.getElementById('notifBrowser');
+        if (elNotif) {
+          elNotif.classList.remove('d-none'); 
+        }
+      }
     });
+
+    // =======================================================================
+    // 🌟 FUNGSI PREFETCH DATA PENDAFTARAN & ANTI-BOT (JITU)
+    // =======================================================================
+    function siapkanKomponenPendaftaranPusat() {
+      console.log("Prefetching data pendaftaran...");
+      
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        
+        // A. Ambil Daftar Sekolah untuk Dropdown Registrasi Siswa Baru
+        google.script.run
+          .withSuccessHandler(function(res) {
+            var selectSekolah = document.getElementById('regIdSekolahTujuan'); // Pastikan ID select di Register.html sesuai ini
+            if (!selectSekolah) return;
+            
+            if (res && res.status === "success" && res.data && res.data.length > 0) {
+              var htmlOpsi = '<option value="" selected disabled>-- Pilih Sekolah Pendaftaran --</option>';
+              for (var i = 0; i < res.data.length; i++) {
+                htmlOpsi += '<option value="' + res.data[i].id_sekolah + '">' + res.data[i].nama_sekolah + '</option>';
+              }
+              selectSekolah.innerHTML = htmlOpsi;
+              console.log("Daftar pilihan sekolah cabang berhasil dimuat di awal.");
+            }
+          })
+          .ambilInformasiKuotaPublik(); // Kita gunakan fungsi yang sama karena mengembalikan array nama & ID sekolah
+
+      }
+    }
+
+    // Fungsi Pembuat Teks Captcha Acak
+    
 
     function muatKuotaLandingPage() {
       var tbodyKuota = document.getElementById('bodiTabelKuotaLanding');
@@ -526,7 +737,7 @@
             }
           })
           .withFailureHandler(function(err) {
-            tbodyKuota.innerHTML = `<tr><td colspan='3' class='text-center py-4 text-danger'>?? Gangguan Jaringan: ${err.message}</td></tr>`;
+            tbodyKuota.innerHTML = `<tr><td colspan='3' class='text-center py-4 text-danger'>Gangguan Jaringan Server</td></tr>`;
           })
           .ambilInformasiKuotaPublik();
       }
@@ -552,7 +763,7 @@
       }
     }
 
-function periksaDanKunciSesiAktif() {
+    function periksaDanKunciSesiAktif() {
       var sesiTersimpan = localStorage.getItem("spmb_sesi_user");
       if (!sesiTersimpan) { switchHalaman('landing-page'); return; }
       try {
@@ -581,7 +792,6 @@ function periksaDanKunciSesiAktif() {
       }
     }
 
-
     function tanganiHasilLogin(response) {
       if (response.status === "success") {
         localStorage.setItem("spmb_sesi_user", JSON.stringify(response));
@@ -589,7 +799,7 @@ function periksaDanKunciSesiAktif() {
       } else {
         var feedback = document.getElementById('loginFeedback');
         if (feedback) {
-          feedback.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-1"></i> ${response.message}`;
+          feedback.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-1"></i> ` + response.message;
           feedback.classList.remove('d-none');
         } else { alert("Otorisasi Gagal: " + response.message); }
       }
@@ -617,79 +827,74 @@ function periksaDanKunciSesiAktif() {
             tanganiHasilLogin(res); 
           } else {
             if(feedback) {
-              feedback.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-1"></i> ${res.message}`;
+              feedback.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-1"></i> ` + res.message;
               feedback.classList.remove('d-none');
-            } else {
-              alert("Gagal: " + res.message);
-            }
+            } else { alert("Gagal: " + res.message); }
           }
         })
         .withFailureHandler(function(err) {
           if(btn) btn.disabled = false;
           if(spinner) spinner.classList.add('d-none');
           if(feedback) {
-            feedback.innerHTML = `Masalah Jaringan Server: ${err.message}`;
+            feedback.innerHTML = "Masalah Jaringan Server: " + err.message;
             feedback.classList.remove('d-none');
-          } else {
-            alert("Eror Jaringan: " + err.message);
-          }
+          } else { alert("Eror Jaringan: " + err.message); }
         })
         .prosesAutentikasi(inputUser, inputPass);
     }
-/**
+
     function eksekusiLogout() {
       if (confirm("Apakah Anda yakin ingin keluar dari sistem portal?")) {
         localStorage.removeItem("spmb_sesi_user");
-        window.top.location.href = window.top.location.href; // Refresh ke halaman uji coba aktif saat ini
+        if (document.getElementById('formLoginSiswa')) {
+          document.getElementById('formLoginSiswa').reset();
+        }
+        var feedback = document.getElementById('loginFeedback');
+        if (feedback) feedback.classList.add('d-none');
+        
+        switchHalaman('landing-page');
+        muatKuotaLandingPage();
+        console.log("User berhasil logout secara aman.");
       }
     }
-*/
 
-function eksekusiLogout() {
-  if (confirm("Apakah Anda yakin ingin keluar dari sistem portal?")) {
-    // 1. Hapus sesi dari memori browser
-    localStorage.removeItem("spmb_sesi_user");
-    
-    // 2. Kosongkan data input login sebelumnya agar bersih
-    if (document.getElementById('formLoginSiswa')) {
-      document.getElementById('formLoginSiswa').reset();
-    }
-    
-    // 3. Sembunyikan alert error login lama jika ada
-    var feedback = document.getElementById('loginFeedback');
-    if (feedback) feedback.classList.add('d-none');
-    
-    // 4. Alihkan ke halaman utama secara internal (Aman dari blokir Iframe Sandbox)
-    switchHalaman('landing-page');
-    
-    // 5. Opsional: Tampilkan pesan sukses kecil jika diperlukan
-    console.log("User berhasil logout secara aman.");
-  }
-}
-
-    function cetakDataPendaftar() {
-      const judulAsli = document.title;
-      document.title = "Laporan_Pendaftar_SPMB_" + new Date().toISOString().slice(0,10);
-      window.print();
-      document.title = judulAsli;
-    }
-
-    // Fungsi Utama Toggle Mata Password
     function togglePasswordVisibility(button) {
       var container = button.closest('.input-group');
       var passwordInput = container.querySelector('input');
-      var icon = button.querySelector('i');
-
-      if (!passwordInput || !icon) return;
-
-      if (passwordInput.type === "password") {
-        passwordInput.type = "text";
-        icon.className = "bi bi-eye-slash"; 
-      } else {
-        passwordInput.type = "password";
-        icon.className = "bi bi-eye"; 
-      }
+      if (!passwordInput) return;
+      passwordInput.type = (passwordInput.type === "password") ? "text" : "password";
     }
+
+    function bukaHalamanDariModal(idHalamanTarget) {
+      var elemenModal = document.getElementById('modalAksesPPDB');
+      var instanceModal = bootstrap.Modal.getInstance(elemenModal);
+      if (instanceModal) {
+        instanceModal.hide();
+      }
+      setTimeout(function() {
+        if (typeof switchHalaman === "function") {
+          switchHalaman(idHalamanTarget);
+        }
+      }, 300); 
+    }
+
+  function bukaHalamanDariModalRegister() {
+  var elemenModal = document.getElementById('modalAksesPPDB');
+  var instanceModal = bootstrap.Modal.getInstance(elemenModal);
+  if (instanceModal) {
+    instanceModal.hide();
+  }
+  setTimeout(function() {
+    // 🌟 Memanggil engine kontroler milik Register.html yang sudah kita perbaiki di atas
+    if (typeof bukaHalamanRegister === "function") {
+      bukaHalamanRegister();
+    } else {
+      switchHalaman('page-register');
+    }
+  }, 300); 
+}
+
   </script>
+
 </body>
 </html>
