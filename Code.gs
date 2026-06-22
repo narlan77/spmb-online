@@ -1,5 +1,6 @@
 // =============================================================================
 //               KONFIGURASI MASTER BASIS DATA CLOUD (SPMB 2026)
+//                         LAYANAN API G-DRIVE v3
 // =============================================================================
 const FOLDER_UTAMA_ID = "KODE__GDRIVE_FOLDER_UTAMA";
 const FOLDER_PENDAFTAR_ID = "KODE_GDRIVE_FOLDER_UNTUK_DATA_PENDAFTARAN";
