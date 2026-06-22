@@ -9,8 +9,8 @@
               
               <div class="flex-shrink-0 position-relative mb-3 mb-sm-0">
                 <div class="bg-white rounded-circle d-flex align-items-center justify-content-center overflow-hidden border border-3 border-white shadow" style="width: 90px; height: 90px;">
-                  <img id="imgFotoProfil" src="" class="w-100 h-100 object-fit-cover d-none" alt="Foto">
-                  <i id="iconFotoProfil" class="bi bi-person-fill text-primary display-4"></i>
+                  <img id="imgFotoProfilSiswa" src="" class="w-100 h-100 object-fit-cover d-none" alt="Foto">
+                  <i id="iconFotoProfilSiswa" class="bi bi-person-fill text-primary display-4"></i>
                 </div>
                 <input type="file" id="fileFoto" class="d-none" accept=".jpg,.jpeg,.png" onchange="uploadFotoProfil(this)">
                 <button class="btn btn-dark btn-sm rounded-circle position-absolute bottom-0 end-0 p-1 shadow-sm d-flex align-items-center justify-content-center" style="width: 28px; height: 28px;" onclick="document.getElementById('fileFoto').click()">
@@ -19,16 +19,21 @@
               </div>
               
               <div class="flex-grow-1 ms-sm-4">
-                <span class="badge bg-white text-primary mb-2 px-3 py-1 rounded-pill text-xs fw-bold tracking-widest text-uppercase">Portal Siswa</span>
+                <span class="badge bg-white text-primary mb-2 px-3 py-1 rounded-pill text-xs fw-bold text-uppercase tracking-wider">Portal Siswa</span>
                 <h4 class="fw-bold mb-1" id="sisNamaDisplay">Memuat Nama Siswa...</h4>
                 <p class="mb-0 opacity-75 small" id="sisNisnDisplay">ID REG: - | NISN: -</p>
                 <p class="mb-0 opacity-75 small mt-1" id="sisSekolahDisplay">
-                  <i class="bi bi-building-fill me-1"></i> Hubungan Cabang Instansi: Memuat...
+                  <i class="bi bi-building-fill me-1"></i> Sekolah Tujuan: Memuat...
                 </p>
+                <div class="small mt-2 bg-white bg-opacity-10 d-inline-block px-3 py-1 rounded-pill border border-white border-opacity-25">
+                  <i class="bi bi-calendar-event me-1"></i> Tahun Pelajaran: <span id="lblTahunPelajaran" class="fw-bold text-warning">...</span>
+                  <span class="mx-2">|</span>
+                  <i class="bi bi-whatsapp me-1"></i> WA Panitia: <span id="lblKontakAdmin" class="fw-bold text-white">...</span>
+                </div>
               </div>
               
               <div class="mt-3 mt-sm-0 flex-shrink-0 d-flex flex-column align-items-center gap-2">
-                <span id="sisStatusBadge" class="badge bg-warning text-dark px-3 py-2 fs-6">Status Seleksi: Pending</span>
+                <span id="sisStatusBadge" class="badge bg-warning text-dark px-3 py-2 fs-6 rounded-3 shadow-sm">Status Seleksi: Pending</span>
                 <button class="btn btn-light text-primary btn-sm rounded-pill px-3 fw-bold shadow-sm" onclick="segarkanBerkasSiswa(this)">
                   <i class="bi bi-arrow-clockwise me-1"></i> Segarkan Data
                 </button>
@@ -40,14 +45,64 @@
       </div>
     </div>
 
+    <div id="boxStatusDitolak" class="card border-danger mb-4 shadow-sm rounded-4 d-none">
+      <div class="card-header bg-danger text-white fw-bold p-3 border-0">
+        <i class="bi bi-exclamation-octagon-fill me-2 fs-5"></i> Verifikasi Berkas Pendaftaran Anda Ditolak
+      </div>
+      <div class="card-body p-4 bg-white">
+        <h6 class="fw-bold text-danger mb-2"><i class="bi bi-chat-left-text-fill me-1"></i>Catatan Penolakan dari Operator Sekolah:</h6>
+        <p id="lblAlasanDitolak" class="text-danger fw-semibold bg-danger-subtle p-3 border border-danger-subtle rounded-3 font-monospace mb-4">"-"</p>
+        
+        <div class="p-4 bg-light rounded-4 border border-warning border-dashed">
+          <h6 class="fw-bold text-dark mb-1"><i class="bi bi-shuffle me-2 text-warning fs-5"></i>Ajukan Pendaftaran Alternatif (Pindah Cabang Pilihan)</h6>
+          <p class="small text-muted mb-3">Karena status Anda ditolak di instansi tujuan saat ini, Anda diberikan hak otoritas untuk mendaftarkan akun NISN ini ke salah satu sekolah cabang mitra kami yang lain.</p>
+<div class="row g-2 align-items-center">
+  <div class="col-sm-8">
+    <div class="input-group">
+      <select id="selSekolahAlternatif" class="form-select rounded-start-3 text-dark fw-medium">
+        <option value="" disabled selected>⏳ Memuat pilihan sekolah...</option>
+      </select>
+      
+      <button type="button" id="btnRefreshAlternatif" class="btn btn-outline-secondary rounded-end-3" title="Segarkan Pilihan Sekolah" onclick="muatOpsiPilihanSekolahSiswa()">
+        <i id="iconRefreshAlternatif" class="bi bi-arrow-clockwise"></i>
+        <span id="spinnerRefreshAlternatif" class="spinner-border spinner-border-sm d-none" role="status"></span>
+      </button>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <button type="button" class="btn btn-warning fw-bold w-100 rounded-3 text-dark shadow-sm" onclick="pindahSekolahPilihan()">
+      <i class="bi bi-arrow-right-circle-fill me-1"></i> Proses Pindah Daftar
+    </button>
+  </div>
+</div>
+        </div>
+      </div>
+    </div>
+
     <div class="row mb-4">
       <div class="col-12" id="boxPengumumanSiswa"></div>
     </div>
 
+    <div id="boxAksiCetak" class="mb-4 d-none">
+      <div class="card shadow-sm border-0 rounded-4 bg-white p-3">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+          <div class="d-flex align-items-center gap-3">
+            <div class="bg-success bg-opacity-10 text-success rounded-3 p-2 fs-3"><i class="bi bi-file-earmark-pdf-fill"></i></div>
+            <div>
+              <h6 class="fw-bold mb-0 text-dark">Dokumen Hasil Seleksi Administrasi Resmi</h6>
+              <small class="text-muted">Gunakan lembar cetak dokumen ini sebagai bukti otentik kelulusan berkas pendaftaran.</small>
+            </div>
+          </div>
+          <button type="button" class="btn btn-success fw-bold rounded-3 px-4 py-2 shadow-sm" onclick="cetakSuratKeputusan()">
+            <i class="bi bi-printer-fill me-1"></i> Cetak Surat Keputusan
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div class="row g-3">
-      
       <div class="col-lg-8">
-        <div class="card border-0 shadow-sm rounded-4 h-100">
+        <div class="card border-0 shadow-sm rounded-4 bg-white">
           <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
             <h5 class="fw-bold text-dark mb-0"><i class="bi bi-file-earmark-person-fill text-primary me-2"></i>Formulir Biodata Dapodik</h5>
           </div>
@@ -55,94 +110,113 @@
             
             <div class="row g-3 mb-4">
               <h6 class="fw-bold text-primary border-bottom pb-2 mb-0"><i class="bi bi-person-lines-fill me-2"></i>Biodata Calon Siswa</h6>
+              
               <div class="col-md-6">
                 <label class="form-label small text-muted mb-1">Nama Lengkap <span class="text-danger" style="font-size:0.7rem;">(Terkunci Operator)</span></label>
-                <input type="text" class="form-control form-control-sm bg-light text-muted" id="f_nama" readonly>
+                <input type="text" class="form-control form-control-sm bg-light text-muted fw-bold text-uppercase" id="formNamaSiswa" readonly>
               </div>
+              
               <div class="col-md-6">
-                <label class="form-label small text-muted mb-1">Nomor Kontak / WhatsApp</label>
-                <input type="text" class="form-control form-control-sm" id="f_kontak">
+                <label class="form-label small text-muted mb-1">Nomor Kontak / WhatsApp (Wajib Angka)</label>
+                <input type="text" class="form-control form-control-sm text-dark" id="formTelepon" placeholder="Contoh: 081290886525" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
               </div>
+              
               <div class="col-md-6">
-                <label class="form-label small text-muted mb-1">NIK Calon Siswa</label>
-                <input type="text" class="form-control form-control-sm" id="f_nik_siswa">
+                <label class="form-label small text-muted mb-1">NIK Calon Siswa (16 Digit Angka)</label>
+                <input type="text" class="form-control form-control-sm text-dark" id="formNIK" placeholder="Masukkan 16 Digit NIK" maxlength="16" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
               </div>
+              
               <div class="col-md-6">
-                <label class="form-label small text-muted mb-1">Asal Sekolah</label>
-                <input type="text" class="form-control form-control-sm" id="f_asal">
+                <label class="form-label small text-muted mb-1">Asal Sekolah (Huruf Kapital)</label>
+                <input type="text" class="form-control form-control-sm text-uppercase" id="f_asal" oninput="this.value = this.value.toUpperCase()">
               </div>
+              
               <div class="col-md-6">
-                <label class="form-label small text-muted mb-1">Tempat Lahir</label>
-                <input type="text" class="form-control form-control-sm" id="f_tempat_lahir">
+                <label class="form-label small text-muted mb-1">Tempat Lahir (Huruf Kapital)</label>
+                <input type="text" class="form-control form-control-sm text-uppercase" id="f_tempat_lahir" oninput="this.value = this.value.toUpperCase()">
               </div>
+              
               <div class="col-md-6">
                 <label class="form-label small text-muted mb-1">Tanggal Lahir</label>
-                <input type="date" class="form-control form-control-sm" id="f_tanggal_lahir">
+                <input type="date" class="form-control form-control-sm text-dark" id="f_tanggal_lahir">
               </div>
+              
               <div class="col-12">
-                <label class="form-label small text-muted mb-1">Alamat Lengkap Rumah</label>
-                <textarea class="form-control form-control-sm" id="f_alamat" rows="2"></textarea>
+                <label class="form-label small text-muted mb-1">Alamat Lengkap Rumah (Huruf Kapital)</label>
+                <textarea class="form-control form-control-sm text-uppercase" id="f_alamat" rows="2" oninput="this.value = this.value.toUpperCase()"></textarea>
               </div>
+              
               <div class="col-md-6">
                 <label class="form-label small text-muted mb-2 d-block">Jenis Kelamin</label>
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" type="radio" name="rb_jk" id="jk_l" value="Laki-laki">
-                  <label class="form-check-label small" for="jk_l">Laki-laki</label>
+                  <label class="form-check-label small text-dark" for="jk_l">Laki-laki</label>
                 </div>
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" type="radio" name="rb_jk" id="jk_p" value="Perempuan">
-                  <label class="form-check-label small" for="jk_p">Perempuan</label>
+                  <label class="form-check-label small text-dark" for="jk_p">Perempuan</label>
                 </div>
               </div>
+              
               <div class="col-md-6">
                 <label class="form-label small text-muted mb-2 d-block">Jenis Pendaftaran</label>
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" type="radio" name="rb_jp" id="jp_baru" value="Siswa Baru">
-                  <label class="form-check-label small" for="jp_baru">Siswa Baru</label>
+                  <label class="form-check-label small text-dark" for="jp_baru">Siswa Baru</label>
                 </div>
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" type="radio" name="rb_jp" id="jp_pindah" value="Pindahan">
-                  <label class="form-check-label small" for="jp_pindah">Pindahan</label>
+                  <label class="form-check-label small text-dark" for="jp_pindah">Pindahan</label>
                 </div>
               </div>
             </div>
 
             <div class="row g-3">
               <h6 class="fw-bold text-primary border-bottom pb-2 mb-0"><i class="bi bi-people-fill me-2"></i>Data Orang Tua & Kelas</h6>
+              
               <div class="col-md-6">
-                <label class="form-label small text-muted mb-1">Nama Ayah Kandung</label>
-                <input type="text" class="form-control form-control-sm" id="f_nama_ayah">
+                <label class="form-label small text-muted mb-1">Nama Ayah Kandung (Huruf Kapital)</label>
+                <input type="text" class="form-control form-control-sm text-uppercase" id="f_nama_ayah" oninput="this.value = this.value.toUpperCase()">
               </div>
               <div class="col-md-6">
-                <label class="form-label small text-muted mb-1">NIK Ayah</label>
-                <input type="text" class="form-control form-control-sm" id="f_nik_ayah">
+                <label class="form-label small text-muted mb-1">NIK Ayah (Wajib Angka)</label>
+                <input type="text" class="form-control form-control-sm" id="f_nik_ayah" maxlength="16" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
               </div>
               <div class="col-md-6">
-                <label class="form-label small text-muted mb-1">Nama Ibu Kandung</label>
-                <input type="text" class="form-control form-control-sm" id="f_nama_ibu">
+                <label class="form-label small text-muted mb-1">Nama Ibu Kandung (Huruf Kapital)</label>
+                <input type="text" class="form-control form-control-sm text-uppercase" id="f_nama_ibu" oninput="this.value = this.value.toUpperCase()">
               </div>
               <div class="col-md-6">
-                <label class="form-label small text-muted mb-1">NIK Ibu</label>
-                <input type="text" class="form-control form-control-sm" id="f_nik_ibu">
+                <label class="form-label small text-muted mb-1">NIK Ibu (Wajib Angka)</label>
+                <input type="text" class="form-control form-control-sm" id="f_nik_ibu" maxlength="16" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
               </div>
               <div class="col-sm-4">
                 <label class="form-label small text-muted mb-1">Jumlah Saudara</label>
-                <input type="number" class="form-control form-control-sm text-center" id="f_jumlah_saudara">
+                <input type="number" class="form-control form-control-sm text-center" id="f_jumlah_saudara" min="0">
               </div>
               <div class="col-sm-4">
                 <label class="form-label small text-muted mb-1">Anak Ke-</label>
-                <input type="number" class="form-control form-control-sm text-center" id="f_anak_ke">
+                <input type="number" class="form-control form-control-sm text-center" id="f_anak_ke" min="1">
               </div>
               <div class="col-sm-4">
                 <label class="form-label small text-muted mb-1">Target Kelas</label>
-                <input type="text" class="form-control form-control-sm text-center" id="f_kelas_dimasuki">
+                <input type="text" class="form-control form-control-sm text-center text-uppercase" id="f_kelas_dimasuki" oninput="this.value = this.value.toUpperCase()">
+              </div>
+            </div>
+
+            <div class="mt-4 p-3 bg-light rounded-3 border border-secondary border-opacity-25 shadow-inner">
+              <div class="form-check d-flex align-items-start">
+                <input class="form-check-input border-secondary flex-shrink-0 mt-1" type="checkbox" id="chkPersetujuanSyarat" onchange="validasiKunciTombolSimpan()">
+                <label class="form-check-label small text-dark fw-semibold ms-2" for="chkPersetujuanSyarat" style="cursor: pointer; user-select: none;">
+                  Saya menyatakan dengan sadar dan sejujurnya bahwa seluruh berkas dokumen fisik serta isian formulir Dapodik yang saya kirimkan adalah benar, valid, dan saya bersedia mematuhi segala peraturan tertulis yang berlaku di instansi sekolah tujuan.
+                </label>
               </div>
             </div>
 
             <div class="row mt-4 border-top pt-3">
               <div class="col-12 text-end">
-                <button type="button" id="btnSimpanBiodata" class="btn btn-success btn-sm rounded-pill px-4 fw-bold shadow-sm" onclick="simpanPerubahanBiodataSiswa(this)">
-                  <i class="bi bi-floppy-fill me-1"></i> Simpan Perubahan Biodata
+                <button type="button" id="btnSimpanBiodata" class="btn btn-primary btn-sm rounded-pill px-4 fw-bold shadow-sm" disabled onclick="prosesSimpanBiodataSiswa(this)">
+                  <i class="bi bi-cloud-arrow-up-fill me-1"></i> Simpan Perubahan Biodata
                 </button>
               </div>
             </div>
@@ -152,16 +226,16 @@
       </div>
       
       <div class="col-lg-4">
-        <div class="card border-0 shadow-sm rounded-4 h-100">
+        <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
           <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
             <h6 class="fw-bold text-dark mb-0"><i class="bi bi-cloud-arrow-up-fill text-primary me-2"></i>Status Berkas Dokumen</h6>
           </div>
           <div class="card-body p-4">
             
-            <div id="status_box_KK" class="p-3 border rounded-3 mb-3 bg-white">
+            <div id="status_box_KK" class="p-3 border rounded-3 mb-3 bg-white shadow-sm">
               <div class="d-flex justify-content-between align-items-center">
                 <div>
-                  <span class="fw-bold small d-block">Kartu Keluarga (KK)</span>
+                  <span class="fw-bold small d-block text-dark">Kartu Keluarga (KK)</span>
                   <span id="badge_KK" class="badge text-xs mt-1 bg-secondary">Memuat...</span>
                 </div>
                 <div id="btn_KK" class="d-flex gap-1"></div>
@@ -169,10 +243,10 @@
               <input type="file" id="file_upload_KK" class="d-none" accept=".jpg,.jpeg,.png,.pdf" onchange="uploadDokumenSiswa(this, 'KK')">
             </div>
 
-            <div id="status_box_Akta" class="p-3 border rounded-3 mb-3 bg-white">
+            <div id="status_box_Akta" class="p-3 border rounded-3 mb-3 bg-white shadow-sm">
               <div class="d-flex justify-content-between align-items-center">
                 <div>
-                  <span class="fw-bold small d-block">Akta Kelahiran</span>
+                  <span class="fw-bold small d-block text-dark">Akta Kelahiran</span>
                   <span id="badge_Akta" class="badge text-xs mt-1 bg-secondary">Memuat...</span>
                 </div>
                 <div id="btn_Akta" class="d-flex gap-1"></div>
@@ -180,10 +254,10 @@
               <input type="file" id="file_upload_Akta" class="d-none" accept=".jpg,.jpeg,.png,.pdf" onchange="uploadDokumenSiswa(this, 'Akta')">
             </div>
 
-            <div id="status_box_SKL" class="p-3 border rounded-3 mb-3 bg-white">
+            <div id="status_box_SKL" class="p-3 border rounded-3 mb-3 bg-white shadow-sm">
               <div class="d-flex justify-content-between align-items-center">
                 <div>
-                  <span class="fw-bold small d-block">SKL / Ijazah</span>
+                  <span class="fw-bold small d-block text-dark">SKL / Ijazah</span>
                   <span id="badge_SKL" class="badge text-xs mt-1 bg-secondary">Memuat...</span>
                 </div>
                 <div id="btn_SKL" class="d-flex gap-1"></div>
@@ -191,10 +265,10 @@
               <input type="file" id="file_upload_SKL" class="d-none" accept=".jpg,.jpeg,.png,.pdf" onchange="uploadDokumenSiswa(this, 'SKL')">
             </div>
 
-            <div id="status_box_KIP" class="p-3 border rounded-3 mb-3 bg-white">
+            <div id="status_box_KIP" class="p-3 border rounded-3 mb-3 bg-white shadow-sm text-dark">
               <div class="d-flex justify-content-between align-items-center">
                 <div>
-                  <span class="fw-bold small d-block">Kartu KIP (Opsional)</span>
+                  <span class="fw-bold small d-block text-dark">Kartu KIP (Opsional)</span>
                   <span id="badge_KIP" class="badge text-xs mt-1 bg-secondary">Memuat...</span>
                 </div>
                 <div id="btn_KIP" class="d-flex gap-1"></div>
@@ -205,15 +279,265 @@
           </div>
         </div>
       </div>
-      
+ 
     </div>
   </div>
 </div>
 
 <script>
+// Penampung variabel global sesi login siswa
+var sisNisnLogin = sisNisnLogin || "";
+var sisSchId = sisSchId || "";
+var sisIdPendaftar = "";
+
+window.addEventListener('DOMContentLoaded', function() {
+  muatDataSiswaDatabase();
+});
+
 /**
- * 1. FUNGSI UTAMA SINKRONISASI DATABASE SISWA
+ * =========================================================================
+ * 🔄 CORE FRONTEND ENGINE: SINKRONISASI DATABASES DASHBOARD SISWA (UTUH)
+ * FIX: Auto-Kunci Kop Admin, Kebal Sandbox Foto Drive, & Sinkronisasi Cache Cetak
+ * =========================================================================
  */
+function muatDataSiswaDatabase() {
+  console.log("Memulai sinkronisasi data profil lengkap siswa...");
+  
+  // -------------------------------------------------------------------------
+  // TAHAP 1: VALIDASI & PRE-FETCH OVERRIDE LOCALSTORAGE STORAGE
+  // -------------------------------------------------------------------------
+  if (!sisSchId || !sisNisnLogin) {
+    var sesiTersimpan = localStorage.getItem("spmb_sesi_user");
+    if (sesiTersimpan) {
+      var user = JSON.parse(sesiTersimpan);
+      sisNisnLogin = user.username ? user.username.toString().trim() : "";
+      sisSchId = user.id_sekolah ? user.id_sekolah.toString().trim() : "";
+    }
+  }
+
+  if (!sisNisnLogin || !sisSchId) {
+    console.error("❌ EROR SESI: ID Sekolah atau NISN login tidak ditemukan di localStorage.");
+    alert("Sesi siswa telah habis atau tidak valid. Silakan lakukan login ulang.");
+    if (typeof switchHalaman === "function") switchHalaman('landing-page');
+    return;
+  }
+
+  // -------------------------------------------------------------------------
+  // FITUR 1: SINKRONISASI BANNER AKTIF & KUNCI KOP SURAT ADMIN (INTEGRATED)
+  // -------------------------------------------------------------------------
+  if (sisSchId) {
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
+      google.script.run
+        .withSuccessHandler(function(res) {
+          if (res && res.status === "success" && res.data) {
+            var elTahun = document.getElementById('lblTahunPelajaran');
+            var elKontak = document.getElementById('lblKontakAdmin');
+            
+            if (elTahun) elTahun.innerText = res.data.tahun_pelajaran || "";
+            if (elKontak) elKontak.innerText = res.data.kontak_admin || "";
+            
+            // 🔥 LOCK SAKTI: Amankan kop surat dari admin sekolah ke memori global frontend
+            if (typeof kopSuratDariAdminSekolah !== 'undefined') {
+              kopSuratDariAdminSekolah = res.data.header_laporan || "";
+              console.log("🏛️ Kop Surat resmi Admin berhasil diamankan di RAM browser.");
+            }
+          }
+        })
+        .ambilKonfigurasiSiswa(sisSchId); // Pastikan fungsi server ini me-return header_laporan
+    }
+  }
+
+  // -------------------------------------------------------------------------
+  // FITUR 2: SINKRONISASI NAMA SEKOLAH ASAL/TUJUAN DI BANNER UTAMA
+  // -------------------------------------------------------------------------
+  if (sisNisnLogin) {
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
+      google.script.run
+        .withSuccessHandler(function(namaSekolahPusat) {
+          var elSekolah = document.getElementById('sisSekolahDisplay');
+          if (elSekolah && namaSekolahPusat) {
+            elSekolah.innerHTML = `<i class="bi bi-building-fill me-1">Sekolah Tujuan: </i><strong class="text-white bg-white bg-opacity-25 px-2 py-1 rounded shadow-sm">${namaSekolahPusat}</strong>`;
+          }
+        })
+        .ambilNamaSekolahTujuanSiswa(sisNisnLogin);
+    }
+  }
+
+  // -------------------------------------------------------------------------
+  // EMBARKASI UTAMA: AMBIL BARIS DATA ISIAN FORMULIR & IDENTITAS PROFIL SISWA
+  // -------------------------------------------------------------------------
+  if (typeof google !== 'undefined' && google.script && google.script.run) {
+    google.script.run
+      .withSuccessHandler(function(res) {
+        if (res && res.status === "success") {
+          var d = res.data;
+          if (!d) { 
+            console.error("❌ EROR DATABASE: Respon server success tapi data objek siswa kosong."); 
+            return; 
+          }
+          
+          sisIdPendaftar = d.id_pendaftar; 
+          
+          // 🔥 CACHE SYNC: Masukkan data ke array cache lokal untuk amunisi fungsi tombol cetak SK Anda
+          if (typeof cachePendaftarSekolahMitra !== 'undefined') {
+            cachePendaftarSekolahMitra = [ d ];
+          }
+          
+          // Pemetaan Teks Layar Dashboard Monitor
+          if (document.getElementById('sisNamaDisplay')) document.getElementById('sisNamaDisplay').innerText = (d.nama || "").toUpperCase();
+          if (document.getElementById('sisNisnDisplay')) document.getElementById('sisNisnDisplay').innerText = "ID REG: " + (sisIdPendaftar || "-") + " | NISN: " + (d.nisn || "-");
+          
+          // Pemetaan Input Value di Formulir Biodata Mandiri
+          if (document.getElementById('formNamaSiswa')) document.getElementById('formNamaSiswa').value = (d.nama || "").toUpperCase();
+          if (document.getElementById('formTelepon')) document.getElementById('formTelepon').value = d.kontak || "";
+          if (document.getElementById('formNIK')) document.getElementById('formNIK').value = d.nik_siswa || "";
+          if (document.getElementById('f_asal')) document.getElementById('f_asal').value = (d.asal_sekolah || "").toUpperCase();
+          if (document.getElementById('f_alamat')) document.getElementById('f_alamat').value = (d.alamat || "").toUpperCase();
+          if (document.getElementById('f_tempat_lahir')) document.getElementById('f_tempat_lahir').value = (d.tempat_lahir || "").toUpperCase();
+          if (document.getElementById('f_tanggal_lahir')) document.getElementById('f_tanggal_lahir').value = d.tanggal_lahir || "";
+          if (document.getElementById('f_nama_ayah')) document.getElementById('f_nama_ayah').value = (d.nama_ayah || "").toUpperCase();
+          if (document.getElementById('f_nik_ayah')) document.getElementById('f_nik_ayah').value = d.nik_ayah || "";
+          if (document.getElementById('f_nama_ibu')) document.getElementById('f_nama_ibu').value = (d.nama_ibu || "").toUpperCase();
+          if (document.getElementById('f_nik_ibu')) document.getElementById('f_nik_ibu').value = d.nik_ibu || "";
+          if (document.getElementById('f_jumlah_saudara')) document.getElementById('f_jumlah_saudara').value = d.jumlah_saudara || 0;
+          if (document.getElementById('f_anak_ke')) document.getElementById('f_anak_ke').value = d.anak_ke || 1;
+          if (document.getElementById('f_kelas_dimasuki')) document.getElementById('f_kelas_dimasuki').value = d.kelas_dimasuki || "";
+          
+          // 1. Set Radio Button Jenis Kelamin
+          if (d.jenis_kelamin) {
+            let rbJK = document.querySelector(`input[name="rb_jk"][value="${d.jenis_kelamin}"]`);
+            if (rbJK) rbJK.checked = true;
+          }
+
+          // 2. Set Radio Button Jenis Pendaftaran
+          if (d.jenis_pendaftaran) {
+            let rbJP = document.querySelector(`input[name="rb_jp"][value="${d.jenis_pendaftaran}"]`);
+            if (rbJP) rbJP.checked = true;
+          }
+          
+          // Manajemen Status Seleksi Kelulusan
+          var status = d.status_pendaftaran || "Pending";
+          console.log("-> STATUS SELEKSI SISWA TERDETEKSI:", status);
+          
+          var badge = document.getElementById('sisStatusBadge');
+          if (badge) {
+            badge.innerText = "Status Seleksi: " + status;
+            badge.className = "badge px-3 py-2 fs-6 " + (status.toLowerCase() === "diterima" ? "bg-success" : (status.toLowerCase() === "ditolak" ? "bg-danger" : "bg-warning text-dark"));
+          }
+
+          var containerPengumuman = document.getElementById('boxPengumumanSiswa');
+          
+          // KONDISI A: SISWA DITOLAK
+          if (status.toLowerCase() === "ditolak" || status.toLowerCase() === "tidak lulus") {
+            var boxDitolak = document.getElementById('boxStatusDitolak');
+            if (boxDitolak) boxDitolak.classList.remove('d-none');
+            
+            var lblAlasan = document.getElementById('lblAlasanDitolak') || document.getElementById('lblAlasan');
+            if (lblAlasan) lblAlasan.innerText = d.alasan_ditolak || "Berkas tidak lengkap atau tidak sesuai kriteria instansi.";
+            
+            var boxCetak = document.getElementById('boxAksiCetak');
+            if (boxCetak) boxCetak.classList.remove('d-none');
+            
+            if (containerPengumuman) containerPengumuman.innerHTML = "";
+            
+            // Panggil menu mutasi sekolah cabang pilihan
+            if (typeof muatOpsiPilihanSekolahSiswa === "function") muatOpsiPilihanSekolahSiswa();
+
+          // KONDISI B: SISWA DITERIMA
+          } else if (status.toLowerCase() === "diterima" || status.toLowerCase() === "lulus") {
+            if (document.getElementById('boxStatusDitolak')) document.getElementById('boxStatusDitolak').classList.add('d-none');
+            if (document.getElementById('boxAksiCetak')) document.getElementById('boxAksiCetak').classList.remove('d-none');
+            if (containerPengumuman) {
+              containerPengumuman.innerHTML = `
+                <div class="card border-0 shadow-sm rounded-4 p-4 text-start bg-success bg-opacity-10" style="border-left: 5px solid #198754 !important;">
+                  <h5 class="fw-bold text-success mb-1"><i class="bi bi-check-circle-fill me-1"></i> Selamat! Anda Dinyatakan Lulus</h5>
+                  <p class="mb-0 text-dark small">Silakan unduh/cetak Surat Keputusan resmi di bawah ini dan bawa lembar fisik tersebut saat melakukan daftar ulang ke panitia.</p>
+                </div>`;
+            }
+
+          // KONDISI C: SISWA PENDING/ANTREAN
+          } else {
+            if (document.getElementById('boxStatusDitolak')) document.getElementById('boxStatusDitolak').classList.add('d-none');
+            if (document.getElementById('boxAksiCetak')) document.getElementById('boxAksiCetak').classList.add('d-none');
+            if (containerPengumuman) {
+              containerPengumuman.innerHTML = `
+                <div class="card border-0 shadow-sm rounded-4 p-4 text-start bg-warning bg-opacity-10" style="border-left: 5px solid #ffc107 !important;">
+                  <h6 class="fw-bold text-dark mb-1"><i class="bi bi-hourglass-split me-1"></i> Berkas Dalam Antrean Peninjauan</h6>
+                  <p class="mb-0 text-muted small">Panitia sekolah sedang melakukan validasi kesesuaian dokumen pendaftaran Anda. Mohon periksa halaman dashboard ini secara berkala.</p>
+                </div>`;
+            }
+          }
+
+          // -------------------------------------------------------------------------
+          // 🔥 MANAGEMENT RENDER AVATAR FOTO PROFIL SISWA (FIX BYPASS ENDPOINT)
+          // -------------------------------------------------------------------------
+          // =========================================================================
+// 🔥 FIX AKHIR: SINKRONISASI FOTO DI DASHBOARD SISWA (ANTI-BLANK)
+// =========================================================================
+var imgProfil = document.getElementById('imgFotoProfil'); // ID elemen <img> Anda
+var iconProfil = document.getElementById('iconFotoProfil'); // ID elemen ikon siluet/avatar Anda
+
+// Ambil data link foto (Mendukung huruf kecil penuh sesuai kiriman Code.gs terbaru)
+var fotoUrl = d.link_foto || d.Link_Foto || ""; 
+
+if (fotoUrl && fotoUrl !== "" && fotoUrl !== "-") {
+  if (fotoUrl.includes("drive.google.com")) {
+    var fileId = "";
+    if (fotoUrl.includes("/d/")) {
+      fileId = fotoUrl.split("/d/")[1].split("/")[0];
+    } else if (fotoUrl.includes("id=")) {
+      fileId = fotoUrl.split("id=")[1].split("&")[0];
+    }
+    
+    // Konversi ke Google API Rendering Endpoint HTTPS resmi (Sama seperti di admin)
+    if (fileId !== "") {
+      fotoUrl = "https://lh3.googleusercontent.com/d/" + fileId;
+    }
+  }
+  
+  if (imgProfil) {
+    imgProfil.src = fotoUrl;
+    imgProfil.classList.remove('d-none'); // Munculkan foto siswa
+    
+    // Pengaman jika terjadi kendala loading gambar
+    imgProfil.onerror = function() {
+      imgProfil.classList.add('d-none');
+      if (iconProfil) {
+        iconProfil.className = "bi bi-person-circle text-danger display-4";
+        iconProfil.classList.remove('d-none');
+      }
+    };
+  }
+  if (iconProfil) iconProfil.classList.add('d-none'); // Sembunyikan ikon default
+} else {
+  // Jika siswa memang belum upload foto, tampilkan ikon siluet default
+  if (imgProfil) imgProfil.classList.add('d-none');
+  if (iconProfil) {
+    iconProfil.className = "bi bi-person-circle text-secondary display-4";
+    iconProfil.classList.remove('d-none');
+  }
+}
+
+          // Sinkronisasi status tautan berkas dokumen digital
+          if (typeof perbaruiUIStatusDokumenSiswa === "function") {
+            perbaruiUIStatusDokumenSiswa('KK', d.link_kk);
+            perbaruiUIStatusDokumenSiswa('Akta', d.link_akta);
+            perbaruiUIStatusDokumenSiswa('SKL', d.link_skl);
+            perbaruiUIStatusDokumenSiswa('KIP', d.link_kip);
+          }
+          
+        } else {
+          alert("Gagal memproses data profil dari server: " + res.message);
+        }
+      })
+      .withFailureHandler(function(err) {
+        alert("❌ Putus Jaringan Jarak Jauh: " + err.message);
+      })
+      .ambilProfilSiswa(sisSchId, sisNisnLogin); 
+  }
+}
+
+/**
 function muatDataSiswaDatabase() {
   console.log("Memulai sinkronisasi data profil lengkap siswa...");
   
@@ -225,388 +549,636 @@ function muatDataSiswaDatabase() {
       sisSchId = user.id_sekolah ? user.id_sekolah.toString().trim() : "";
     }
   }
-  // =====================================================================
-  // LOGIKA BARU: Tarik Nama Sekolah Langsung Dari Relasi MASTER_SS_ID
-  // =====================================================================
-  if (sisNisnLogin) {
-    google.script.run
-      .withSuccessHandler(function(namaSekolahPusat) {
-        var elSekolah = document.getElementById('sisSekolahDisplay');
-        if (elSekolah && namaSekolahPusat) {
-          elSekolah.innerHTML = `<i class="bi bi-building-fill me-1"></i> Sekolah Tujuan: <strong class="text-white bg-white bg-opacity-25 px-2 py-1 rounded shadow-sm">${namaSekolahPusat}</strong>`;
-        }
-      })
-      .ambilNamaSekolahTujuanSiswa(sisNisnLogin);
-  }
 
-  if (!sisSchId || !sisNisnLogin) {
-    var badge = document.getElementById('sisStatusBadge');
-    if (badge) {
-      badge.className = "badge bg-danger px-3 py-2 fs-6";
-      badge.innerText = "Status: Sesi Habis, Silakan Login Ulang";
-    }
+  if (!sisNisnLogin || !sisSchId) {
+    console.error("❌ EROR SESI: ID Sekolah atau NISN login tidak ditemukan di localStorage.");
+    alert("Sesi siswa telah habis atau tidak valid. Silakan lakukan login ulang.");
+    if (typeof switchHalaman === "function") switchHalaman('landing-page');
     return;
   }
-  
-  google.script.run
-    .withSuccessHandler(function(res) {
-      if (res && res.status === "success") {
-        var d = res.data;
-        sisIdPendaftar = d.id_pendaftar; 
-        
-        // Render Teks Institusi jika dikirim oleh sistem
-        var elSekolah = document.getElementById('sisSekolahDisplay');
-        if (elSekolah && (d.nama_sekolah || d.Nama_Sekolah)) {
-          elSekolah.innerHTML = `<i class="bi bi-building-fill me-1"></i> Hubungan Cabang Instansi: <strong>${d.nama_sekolah || d.Nama_Sekolah}</strong>`;
-        }
-        
-        if (document.getElementById('sisNamaDisplay')) {
-          document.getElementById('sisNamaDisplay').innerText = d.nama || "Siswa Pendaftar";
-        }
-        if (document.getElementById('sisNisnDisplay')) {
-          document.getElementById('sisNisnDisplay').innerText = "ID REG: " + (sisIdPendaftar || "-") + " | NISN: " + (d.nisn || "-");
-        }
-       
-        var status = d.status_pendaftaran || d.status || "Pending";
-        var badge = document.getElementById('sisStatusBadge');
-        if (badge) {
-          badge.innerText = "Status Seleksi: " + status;
-          badge.className = "badge px-3 py-2 fs-6 " + 
-            (status.toLowerCase() === "diterima" ? "bg-success" : 
-            (status.toLowerCase() === "ditolak" ? "bg-danger" : "bg-warning text-dark"));
-        }
 
-        // CONTROL WIDGET PENGUMUMAN
-        var containerPengumuman = document.getElementById('boxPengumumanSiswa');
-        if (containerPengumuman) {
-          var namaSiswa = d.nama || "Calon Siswa";
-          var catatanDitolak = d.alasan_ditolak || d.Alasan_Ditolak || "-";
+  // FITUR 1: Sinkronisasi Data Banner Aktif (Tahun Pelajaran & Kontak WA Operator Cabang)
+  if (sisSchId) {
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
+      google.script.run
+        .withSuccessHandler(function(res) {
+          if(res && res.status === "success" && res.data) {
+            var elTahun = document.getElementById('lblTahunPelajaran');
+            var elKontak = document.getElementById('lblKontakAdmin');
+            if (elTahun) elTahun.innerText = res.data.tahun_pelajaran || "";
+            if (elKontak) elKontak.innerText = res.data.kontak_admin || "";
+          }
+        })
+        .ambilKonfigurasiSiswa(sisSchId);
+    }
+  }
 
-          if (status.toLowerCase() === "diterima") {
-            containerPengumuman.innerHTML = `
-              <div class="card border-0 shadow-sm rounded-4 p-4 text-center text-sm-start" style="background-color: #e8f5e9; border-left: 5px solid #2e7d32 !important;">
-                <div class="d-flex align-items-center gap-3 flex-column flex-sm-row">
-                  <div class="text-success flex-shrink-0" style="font-size: 2.3rem;"><i class="bi bi-trophy-fill"></i></div>
-                  <div class="flex-grow-1">
-                    <h5 class="fw-bold text-success mb-1">Selamat, ${namaSiswa}!</h5>
-                    <p class="mb-1 text-dark fw-medium small">Anda dinyatakan <span class="badge bg-success px-2 py-05 rounded-pill text-xs">DITERIMA</span> sebagai Calon Siswa Baru.</p>
-                    <small class="text-muted d-block mt-1">Silakan lakukan proses daftar ulang berkas fisik ke panitia pelaksana sekolah sesuai dengan jadwal reguler yang ditentukan.</small>
-                  </div>
-                </div>
-              </div>
-            `;
-          } else if (status.toLowerCase() === "ditolak") {
-            var teksAlasan = (catatanDitolak && catatanDitolak !== "" && catatanDitolak !== "-") 
-                             ? catatanDitolak 
-                             : "Mohon hubungi operator administrasi sekolah pilihan Anda untuk petunjuk verifikasi berkas lebih lanjut.";
+  // FITUR 2: Sinkronisasi Nama Sekolah Asal/Tujuan di Header Banner Atas
+  if (sisNisnLogin) {
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
+      google.script.run
+        .withSuccessHandler(function(namaSekolahPusat) {
+          var elSekolah = document.getElementById('sisSekolahDisplay');
+          if (elSekolah && namaSekolahPusat) {
+            elSekolah.innerHTML = `<i class="bi bi-building-fill me-1"></i><strong class="text-white bg-white bg-opacity-25 px-2 py-1 rounded shadow-sm">${namaSekolahPusat}</strong>`;
+          }
+        })
+        .ambilNamaSekolahTujuanSiswa(sisNisnLogin);
+    }
+  }
 
-            containerPengumuman.innerHTML = `
-              <div class="card border-0 shadow-sm rounded-4 p-4" style="background-color: #fdf2f2; border-left: 5px solid #dc2626 !important;">
-                <div class="d-flex align-items-start gap-3 flex-column flex-sm-row">
-                  <div class="text-danger flex-shrink-0" style="font-size: 2.2rem;"><i class="bi bi-exclamation-octagon-fill"></i></div>
-                  <div class="flex-grow-1">
-                    <h5 class="fw-bold text-danger mb-1">Mohon Maaf, Berkas Verifikasi Anda Ditolak</h5>
-                    <p class="mb-2 text-secondary small">Status Seleksi Akun Anda saat ini: <span class="badge bg-danger px-2 py-1 rounded-pill">DITOLAK</span></p>
-                    <div class="p-3 bg-white rounded-3 border border-danger-subtle mb-0 shadow-sm">
-                      <strong class="text-dark d-block mb-1 small text-uppercase tracking-wider" style="font-size: 0.72rem; color: #555;"><i class="bi bi-chat-left-text-fill text-danger me-1"></i>Catatan Operator Sekolah:</strong>
-                      <p class="mb-0 text-danger fw-semibold small font-monospace" style="word-break: break-word;">${teksAlasan}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            `;
-          } else {
-            containerPengumuman.innerHTML = `
-              <div class="card border-0 shadow-sm rounded-4 p-4 text-center text-sm-start bg-white border-start border-warning" style="border-left-width: 5px !important;">
-                <div class="d-flex align-items-center gap-3 flex-column flex-sm-row">
-                  <div class="text-warning flex-shrink-0" style="font-size: 2rem;"><i class="bi bi-hourglass-split"></i></div>
-                  <div class="flex-grow-1">
-                    <h6 class="fw-bold text-dark mb-1">Berkas Dalam Proses Peninjauan</h6>
-                    <p class="mb-0 text-muted small">Tim panitia pelaksana sekolah sedang memeriksa validitas dokumen fisik dan isian formulir Dapodik Anda. Mohon pantau halaman ini secara berkala.</p>
-                  </div>
-                </div>
-              </div>
-            `;
-          }
-        }
-
-        // --- DISTRIBUSI DATA KE INPUT FORM BIODATA ---
-        if (document.getElementById('f_nama')) document.getElementById('f_nama').value = d.nama || "";
-        if (document.getElementById('f_kontak')) document.getElementById('f_kontak').value = d.kontak || "";
-        if (document.getElementById('f_asal')) document.getElementById('f_asal').value = d.asal_sekolah || "";
-        if (document.getElementById('f_alamat')) document.getElementById('f_alamat').value = d.alamat || "";
-        if (document.getElementById('f_nik_siswa')) document.getElementById('f_nik_siswa').value = d.nik_siswa || "";
-        if (document.getElementById('f_tempat_lahir')) document.getElementById('f_tempat_lahir').value = d.tempat_lahir || "";
-        
-        // Memastikan format Tanggal Lahir kompatibel dengan tag <input type="date">
-        if (document.getElementById('f_tanggal_lahir')) {
-          var tglRaw = d.tanggal_lahir || "";
-          if (tglRaw.includes("T")) tglRaw = tglRaw.split("T")[0];
-          document.getElementById('f_tanggal_lahir').value = tglRaw;
-        }
-        
-        if (document.getElementById('f_nama_ayah')) document.getElementById('f_nama_ayah').value = d.nama_ayah || "";
-        if (document.getElementById('f_nik_ayah')) document.getElementById('f_nik_ayah').value = d.nik_ayah || "";
-        if (document.getElementById('f_nama_ibu')) document.getElementById('f_nama_ibu').value = d.nama_ibu || "";
-        if (document.getElementById('f_nik_ibu')) document.getElementById('f_nik_ibu').value = d.nik_ibu || "";
-        if (document.getElementById('f_jumlah_saudara')) document.getElementById('f_jumlah_saudara').value = d.jumlah_saudara || 0;
-        if (document.getElementById('f_anak_ke')) document.getElementById('f_anak_ke').value = d.anak_ke || 1;
-        if (document.getElementById('f_kelas_dimasuki')) document.getElementById('f_kelas_dimasuki').value = d.kelas_dimasuki || "";
-        
-        // RADIO BUTTONS JENIS KELAMIN
-        var jkVal = d.jenis_kelamin || "";
-        var radJkL = document.getElementById('jk_l');
-        var radJkP = document.getElementById('jk_p');
-        if (radJkL) radJkL.checked = (jkVal.toLowerCase() === "laki-laki");
-        if (radJkP) radJkP.checked = (jkVal.toLowerCase() === "perempuan");
-        
-        // RADIO BUTTONS JENIS PENDAFTARAN
-        var jpVal = d.jenis_pendaftaran || "";
-        var radJpBaru = document.getElementById('jp_baru');
-        var radJpPindah = document.getElementById('jp_pindah');
-        if (radJpBaru) radJpBaru.checked = (jpVal.toLowerCase() === "siswa baru" || jpVal.toLowerCase() === "baru");
-        if (radJpPindah) radJpPindah.checked = (jpVal.toLowerCase() === "pindahan");
-        
-        // RENDER FOTO PROFIL
-        var imgProfil = document.getElementById('imgFotoProfil');
-        var iconProfil = document.getElementById('iconFotoProfil');
-        var fotoUrl = d.link_foto || d.Link_Foto || ""; 
-        
-        if (fotoUrl && fotoUrl !== "" && fotoUrl !== "-") {
-          if (fotoUrl.includes("drive.google.com")) {
-            var fileId = "";
-            if (fotoUrl.includes("/d/")) {
-              fileId = fotoUrl.split("/d/")[1].split("/")[0];
-            } else if (fotoUrl.includes("id=")) {
-              fileId = fotoUrl.split("id=")[1].split("&")[0];
-            }
-            if (fileId !== "") {
-              fotoUrl = "https://lh3.googleusercontent.com/d/" + fileId;
-            }
-          }
-          if (imgProfil) {
-            imgProfil.src = fotoUrl;
-            imgProfil.classList.remove('d-none');
-          }
-          if (iconProfil) iconProfil.classList.add('d-none');
-        } else {
-          if (imgProfil) imgProfil.classList.add('d-none');
-          if (iconProfil) {
-            iconProfil.className = "bi bi-person-circle text-secondary display-4";
-            iconProfil.classList.remove('d-none');
-          }
-        }
-        
-        // SEGARKAN PRATINJAU BERKAS DOKUMEN
-        if (typeof perbaruiUIStatusDokumenSiswa === "function") {
-          perbaruiUIStatusDokumenSiswa('KK', d.link_kk || d.Link_KK);
-          perbaruiUIStatusDokumenSiswa('Akta', d.link_akta || d.Link_Akta);
-          perbaruiUIStatusDokumenSiswa('SKL', d.link_skl || d.Link_SKL || d.link_ijazah || d.Link_Ijazah);
-          perbaruiUIStatusDokumenSiswa('KIP', d.link_kip || d.Link_KIP);
-        }
-        
-      } else {
-        alert("⚠️ Gagal memuat profil: " + res.message);
-      }
-    })
-    .withFailureHandler(function(err) {
-      console.error("Gagal terhubung ke Apps Script Server:", err);
-      alert("❌ Eror Jaringan: Tidak dapat memuat profil data siswa.");
-    })
-    .ambilProfilSiswa(sisSchId, sisNisnLogin); 
+  // EMBARKASI UTAMA: Ambil Baris Data Isian Formulir Siswa Berdasarkan Akun Login
+  if (typeof google !== 'undefined' && google.script && google.script.run) {
+    google.script.run
+      .withSuccessHandler(function(res) {
+        if (res && res.status === "success") {
+          var d = res.data;
+          if (!d) { console.error("❌ EROR DATABASE: Respon server success tapi data objek siswa kosong."); return; }
+          
+          sisIdPendaftar = d.id_pendaftar; 
+          
+          if (document.getElementById('sisNamaDisplay')) document.getElementById('sisNamaDisplay').innerText = (d.nama || "").toUpperCase();
+          if (document.getElementById('sisNisnDisplay')) document.getElementById('sisNisnDisplay').innerText = "ID REG: " + (sisIdPendaftar || "-") + " | NISN: " + (d.nisn || "-");
+          
+          if (document.getElementById('formNamaSiswa')) document.getElementById('formNamaSiswa').value = (d.nama || "").toUpperCase();
+          if (document.getElementById('formTelepon')) document.getElementById('formTelepon').value = d.kontak || "";
+          if (document.getElementById('formNIK')) document.getElementById('formNIK').value = d.nik_siswa || "";
+          if (document.getElementById('f_asal')) document.getElementById('f_asal').value = (d.asal_sekolah || "").toUpperCase();
+          if (document.getElementById('f_alamat')) document.getElementById('f_alamat').value = (d.alamat || "").toUpperCase();
+          if (document.getElementById('f_tempat_lahir')) document.getElementById('f_tempat_lahir').value = (d.tempat_lahir || "").toUpperCase();
+          if (document.getElementById('f_tanggal_lahir')) document.getElementById('f_tanggal_lahir').value = d.tanggal_lahir || "";
+          if (document.getElementById('f_nama_ayah')) document.getElementById('f_nama_ayah').value = (d.nama_ayah || "").toUpperCase();
+          if (document.getElementById('f_nik_ayah')) document.getElementById('f_nik_ayah').value = d.nik_ayah || "";
+          if (document.getElementById('f_nama_ibu')) document.getElementById('f_nama_ibu').value = (d.nama_ibu || "").toUpperCase();
+          if (document.getElementById('f_nik_ibu')) document.getElementById('f_nik_ibu').value = d.nik_ibu || "";
+          if (document.getElementById('f_jumlah_saudara')) document.getElementById('f_jumlah_saudara').value = d.jumlah_saudara || 0;
+          if (document.getElementById('f_anak_ke')) document.getElementById('f_anak_ke').value = d.anak_ke || 1;
+          if (document.getElementById('f_kelas_dimasuki')) document.getElementById('f_kelas_dimasuki').value = d.kelas_dimasuki || "";
+          
+  // 1. Set Radio Button Jenis Kelamin
+  if (d.jenis_kelamin) {
+  // Mencari input radio dengan name="rb_jk" yang value-nya sama dengan d.jenis_kelamin
+  let rbJK = document.querySelector(`input[name="rb_jk"][value="${d.jenis_kelamin}"]`);
+  if (rbJK) rbJK.checked = true;
 }
 
-/**
- * 2. ACTION FRONTEND: FUNGSI TOMBOL SIMPAN UPDATE BIODATA KE SERVER GS
- */
-function simpanPerubahanBiodataSiswa(btn) {
-  if (typeof sisSchId === 'undefined' || typeof sisIdPendaftar === 'undefined' || !sisSchId || !sisIdPendaftar) {
-    alert("❌ Sesi Gagal: Parameter ID Instansi atau Sesi Siswa tidak valid.");
-    return;
+// 2. Set Radio Button Jenis Pendaftaran
+if (d.jenis_pendaftaran) {
+  // Mencari input radio dengan name="rb_jp" yang value-nya sama dengan d.jenis_pendaftaran
+  let rbJP = document.querySelector(`input[name="rb_jp"][value="${d.jenis_pendaftaran}"]`);
+  if (rbJP) rbJP.checked = true;
+}
+          
+          var status = d.status_pendaftaran || "Pending";
+          console.log("-> STATUS SELEKSI SISWA TERDETEKSI:", status);
+          
+          var badge = document.getElementById('sisStatusBadge');
+          if (badge) {
+            badge.innerText = "Status Seleksi: " + status;
+            badge.className = "badge px-3 py-2 fs-6 " + (status.toLowerCase() === "diterima" ? "bg-success" : (status.toLowerCase() === "ditolak" ? "bg-danger" : "bg-warning text-dark"));
+          }
+
+          var containerPengumuman = document.getElementById('boxPengumumanSiswa');
+          
+          // 🚨 KONDISI 1: SISWA DITOLAK / TIDAK LULUS (BUMPER PENGAMAN LUAR)
+          if (status.toLowerCase() === "ditolak" || status.toLowerCase() === "tidak lulus") {
+            console.log("-> KONDISI MATCH: Siswa ditolak. Sinkronisasi dropdown alternatif...");
+            
+            var boxDitolak = document.getElementById('boxStatusDitolak');
+            if (boxDitolak) boxDitolak.classList.remove('d-none');
+            
+            var lblAlasan = document.getElementById('lblAlasanDitolak') || document.getElementById('lblAlasan');
+            if (lblAlasan) lblAlasan.innerText = d.alasan_ditolak || "Berkas tidak lengkap atau tidak sesuai kriteria instansi.";
+            
+            var boxCetak = document.getElementById('boxAksiCetak');
+            if (boxCetak) boxCetak.classList.remove('d-none');
+            
+            if (containerPengumuman) containerPengumuman.innerHTML = "";
+            
+            // 🌟 JALUR EMIT OTOMATIS: Panggil fungsi sinkronisasi dropdown instansi asli
+            muatOpsiPilihanSekolahSiswa();
+
+          } else if (status.toLowerCase() === "diterima" || status.toLowerCase() === "lulus") {
+            if (document.getElementById('boxStatusDitolak')) document.getElementById('boxStatusDitolak').classList.add('d-none');
+            if (document.getElementById('boxAksiCetak')) document.getElementById('boxAksiCetak').classList.remove('d-none');
+            if (containerPengumuman) {
+              containerPengumuman.innerHTML = `
+                <div class="card border-0 shadow-sm rounded-4 p-4 text-start bg-success bg-opacity-10" style="border-left: 5px solid #198754 !important;">
+                  <h5 class="fw-bold text-success mb-1"><i class="bi bi-check-circle-fill me-1"></i> Selamat! Anda Dinyatakan Lulus</h5>
+                  <p class="mb-0 text-dark small">Silakan unduh/cetak Surat Keputusan resmi di bawah ini dan bawa lembar fisik tersebut saat melakukan daftar ulang ke panitia.</p>
+                </div>`;
+            }
+
+          } else {
+            if (document.getElementById('boxStatusDitolak')) document.getElementById('boxStatusDitolak').classList.add('d-none');
+            if (document.getElementById('boxAksiCetak')) document.getElementById('boxAksiCetak').classList.add('d-none');
+            if (containerPengumuman) {
+              containerPengumuman.innerHTML = `
+                <div class="card border-0 shadow-sm rounded-4 p-4 text-start bg-warning bg-opacity-10" style="border-left: 5px solid #ffc107 !important;">
+                  <h6 class="fw-bold text-dark mb-1"><i class="bi bi-hourglass-split me-1"></i> Berkas Dalam Antrean Peninjauan</h6>
+                  <p class="mb-0 text-muted small">Panitia sekolah sedang melakukan validasi kesesuaian dokumen pendaftaran Anda. Mohon periksa halaman dashboard ini secara berkala.</p>
+                </div>`;
+            }
+          }
+
+// RENDER AVATAR FOTO PROFIL SISWA
+var imgProfil = document.getElementById('imgFotoProfil');
+var iconProfil = document.getElementById('iconFotoProfil');
+var fotoUrl = d.link_foto || d.Link_Foto || ""; 
+
+if (fotoUrl && fotoUrl !== "" && fotoUrl !== "-") {
+  
+  // Jika link berasal dari Google Drive, ekstrak File ID-nya
+  if (fotoUrl.includes("drive.google.com")) {
+    var fileId = "";
+    
+    if (fotoUrl.includes("/d/")) {
+      // Menangani format: https://drive.google.com/file/d/FILE_ID/view...
+      fileId = fotoUrl.split("/d/")[1].split("/")[0];
+    } else if (fotoUrl.includes("id=")) {
+      // Menangani format alternatif query param: https://drive.google.com/open?id=FILE_ID
+      fileId = fotoUrl.split("id=")[1].split("&")[0];
+    }
+    
+    // Jika ID berhasil diekstrak, ubah menjadi URL rendering gambar langsung (Direct Link)
+    if (fileId !== "") {
+      fotoUrl = "https://lh3.googleusercontent.com/u/0/d/" + fileId;
+    }
   }
   
-  // Ambil opsi Radio Button Jenis Kelamin secara aman
+  // Suntikkan URL ke elemen Image DOM
+  if (imgProfil) {
+    imgProfil.src = fotoUrl;
+    imgProfil.classList.remove('d-none');
+    
+    // Penanganan darurat jika gambar tetap gagal dimuat (misal: isu hak akses Drive)
+    imgProfil.onerror = function() {
+      imgProfil.classList.add('d-none');
+      if (iconProfil) {
+        iconProfil.className = "bi bi-person-circle text-danger display-4"; // Beri warna merah jika error load
+        iconProfil.classList.remove('d-none');
+      }
+    };
+  }
+  if (iconProfil) iconProfil.classList.add('d-none');
+
+} else {
+  // Jika data foto kosong atau bernilai "-", tampilkan default icon Bootstrap
+  if (imgProfil) imgProfil.classList.add('d-none');
+  if (iconProfil) {
+    iconProfil.className = "bi bi-person-circle text-secondary display-4";
+    iconProfil.classList.remove('d-none');
+  }
+}
+          // Sinkronisasi tombol berkas
+          if (typeof perbaruiUIStatusDokumenSiswa === "function") {
+            perbaruiUIStatusDokumenSiswa('KK', d.link_kk);
+            perbaruiUIStatusDokumenSiswa('Akta', d.link_akta);
+            perbaruiUIStatusDokumenSiswa('SKL', d.link_skl);
+            perbaruiUIStatusDokumenSiswa('KIP', d.link_kip);
+          }
+          
+        } else {
+          alert("Gagal memproses data profil dari server: " + res.message);
+        }
+      })
+      .withFailureHandler(function(err) {
+        alert("❌ Putus Jaringan Jarak Jauh: " + err.message);
+      })
+      .ambilProfilSiswa(sisSchId, sisNisnLogin); 
+  }
+}
+*/
+/**
+ * 🛠️ HELPER ENGINE: GOOGLE DRIVE DIRECT LINK CONVERTER
+ * Mengubah link preview 'view' Google Drive menjadi Direct URL Gambar bypass Sandbox
+ * =========================================================================
+ */
+function ubahKeDirectLinkDrive(urlMentah) {
+  if (!urlMentah || typeof urlMentah !== 'string') return 'https://placehold.co/150x200?text=Tanpa+Foto';
+  
+  // Deteksi ID File unik dari pola URL Google Drive standard
+  var match = urlMentah.match(/\/d\/([a-zA-Z0-9_-]+)/) || urlMentah.match(/id=([a-zA-Z0-9_-]+)/);
+  
+  if (match && match[1]) {
+    var idFile = match[1];
+    // Menggunakan endpoint lh3 yang super lancar dan anti-block di dalam Apps Script
+    return 'https://lh3.googleusercontent.com/u/0/d/' + idFile;
+  }
+  
+  // Jika link bukan dari Drive (misal hosting luar), biarkan apa adanya
+  return urlMentah;
+}
+
+// 🌟 FUNGSI EMIT DROPDOWN UTUH: Kunci presisi ke ID 'selSekolahAlternatif' & Master Server
+function muatOpsiPilihanSekolahSiswa() {
+  var sel = document.getElementById('selSekolahAlternatif');
+  var btn = document.getElementById('btnRefreshAlternatif');
+  var icon = document.getElementById('iconRefreshAlternatif');
+  var spinner = document.getElementById('spinnerRefreshAlternatif');
+  
+  if (!sel) {
+    console.error("❌ EROR ELEMEN: ID 'selSekolahAlternatif' tidak ditemukan di HTML.");
+    return;
+  }
+
+  console.log("-> Tombol Reload dipicu. Menghubungkan ke server pusat...");
+
+  // 1. Set status loading (kunci tombol agar tidak di-klik double)
+  sel.innerHTML = '<option value="" disabled selected>⏳ Memuat pilihan sekolah alternatif...</option>';
+  if (btn) btn.disabled = true;
+  if (icon) icon.classList.add('d-none');
+  if (spinner) spinner.classList.remove('d-none');
+
+  // 2. Jalankan penembakan data ke server Apps Script secara lurus & bersih
+  if (typeof google !== 'undefined' && google.script && google.script.run) {
+    google.script.run
+      .withSuccessHandler(function(res) {
+        console.log("-> Respon sukses dari server diterima:", res);
+        
+        // Kembalikan tombol ke kondisi normal
+        if (btn) btn.disabled = false;
+        if (icon) icon.classList.remove('d-none');
+        if (spinner) spinner.classList.add('d-none');
+        
+        sel.innerHTML = '<option value="" disabled selected>-- Pilih Sekolah Lainnya --</option>';
+        
+        // Normalkan bentuk data array dari server
+        var arr = [];
+        if (Array.isArray(res)) {
+          arr = res;
+        } else if (res && res.data && Array.isArray(res.data)) {
+          arr = res.data;
+        }
+
+        if (arr && arr.length > 0) {
+          var countAktif = 0;
+          
+          arr.forEach(function(s) {
+            var idSekolah = s.id_sekolah || s.ID_Sekolah || s[0] || "";
+            var namaSekolah = s.nama_sekolah || s.Nama_Sekolah || s[1] || "";
+            var npsn = s.npsn || s.NPSN || s[2] || "";
+            var statusDb = s.status || s.Status || s[5] || "";
+
+            if (!idSekolah) return;
+
+            // ELIMINASI: Singkirkan sekolah asal yang menolak siswa saat ini
+            if (typeof sisSchId !== 'undefined' && idSekolah.toString().trim().toLowerCase() === sisSchId.toString().trim().toLowerCase()) {
+              return; 
+            }
+
+            // Filter hanya sekolah yang aktif
+            if (statusDb.toString().trim().toLowerCase() === "aktif" || statusDb === "") {
+              var label = npsn ? namaSekolah + " (" + npsn + ")" : namaSekolah;
+              sel.innerHTML += '<option value="' + idSekolah + '">' + label + '</option>';
+              countAktif++;
+            }
+          });
+          
+          if (countAktif === 0) {
+            sel.innerHTML = '<option value="" disabled>⚠️ Tidak ada sekolah alternatif yang aktif</option>';
+          } else {
+            console.log("✓ Sukses menginjeksikan " + countAktif + " opsi sekolah.");
+          }
+        } else {
+          sel.innerHTML = '<option value="" disabled>⚠️ Gagal mengambil data / Database pusat kosong</option>';
+        }
+      })
+      .withFailureHandler(function(err) {
+        console.error("❌ EROR RESPOND SERVER:", err.message);
+        
+        // Kembalikan tombol ke kondisi normal jika putus koneksi
+        if (btn) btn.disabled = false;
+        if (icon) icon.classList.remove('d-none');
+        if (spinner) spinner.classList.add('d-none');
+        
+        sel.innerHTML = '<option value="" disabled>❌ Gagal memuat data server: ' + err.message + '</option>';
+      })
+      .ambilSemuaSekolahMitra(); // 🌟 KUNCI: Panggil lurus fungsi server Anda yang sudah terbukti jalan!
+  } else {
+    if (btn) btn.disabled = false;
+    if (icon) icon.classList.remove('d-none');
+    if (spinner) spinner.classList.add('d-none');
+    sel.innerHTML = '<option value="" disabled>❌ Jalur API Google Cloud tidak terdeteksi</option>';
+  }
+}
+
+function validasiKunciTombolSimpan() {
+  var isChecked = document.getElementById('chkPersetujuanSyarat').checked;
+  document.getElementById('btnSimpanBiodata').disabled = !isChecked;
+}
+
+
+// =========================================================================
+// 🖨️ REFINED PRINTER ENGINE: CETAK SURAT KEPUTUSAN DENGAN KOP DINAMIS CABANG
+// FIX: Kebal Eror .find() Gaib, Anti-Crash, & Otomatis Menyisipkan Nama Cabang
+// =========================================================================
+function cetakSuratKeputusan() {
+  console.log("🖨️ Memulai generator rendering Surat Keputusan...");
+  
+  // 1. AMBIL DATA DARI DOM ELEMEN DI LAYAR UTAMA TERLEBIH DAHULU
+  var elemenTahun = document.getElementById('lblTahunPelajaran');
+  var elemenStatus = document.getElementById('boxStatusDitolak');
+  var elemenNama = document.getElementById('sisNamaDisplay');
+  var elemenAlasan = document.getElementById('lblAlasanDitolak');
+  var elemenSekolah = document.getElementById('sisSekolahDisplay'); // Mengambil backup nama sekolah di layar
+  
+  var txtTahun = elemenTahun ? elemenTahun.innerText.trim() : "2026/2027";
+  var statusSiswa = (elemenStatus && !elemenStatus.classList.contains('d-none')) ? "DITOLAK" : "DITERIMA";
+  var namaSiswa = elemenNama ? elemenNama.innerText.trim().toUpperCase() : "CALON SISWA";
+  var alasanPenolakan = elemenAlasan ? elemenAlasan.innerText.trim() : "-";
+  
+  // Set default fallback: pakai elemenSekolah di web dulu, kalau kosong baru isi "SEKOLAH TUJUAN"
+  var namaSekolahTujuan = elemenSekolah ? elemenSekolah.innerText.trim().toUpperCase() : "SEKOLAH TUJUAN";
+
+  // Ambil variabel global pendaftaran dengan safe fallback
+  var nisnAktif = (typeof sisNisnLogin !== 'undefined' && sisNisnLogin) ? sisNisnLogin.toString().trim() : "";
+  var idPenAktif = (typeof sisIdPendaftar !== 'undefined' && sisIdPendaftar) ? sisIdPendaftar.toString().trim() : "";
+
+  // 2. PROSES PENCARIAN NAMA SEKOLAH CABANG DI MEMORI CACHE (SAFE ENGINE)
+  if (typeof cachePendaftarSekolahMitra !== 'undefined' && Array.isArray(cachePendaftarSekolahMitra)) {
+    var d = cachePendaftarSekolahMitra.find(function(item) {
+      if (!item) return false;
+      
+      var matchNisn = false;
+      var matchId = false;
+      
+      if (nisnAktif !== "") {
+        var nisnDb = (item.nisn || item.NISN || "").toString().trim();
+        matchNisn = (nisnDb === nisnAktif);
+      }
+      
+      if (idPenAktif !== "") {
+        var idDb = (item.id_pendaftar || item.id_siswa || item.idPendaftar || "").toString().trim();
+        matchId = (idDb === idPenAktif);
+      }
+      
+      return matchNisn || matchId;
+    });
+    
+    if (d) {
+      namaSekolahTujuan = (d.nama_sekolah || d.nama_sekolah_pilihan || d.sekolah_cabang || namaSekolahTujuan).toUpperCase();
+      console.log("🎯 Sukses Sinkronisasi Kop! Sekolah Cabang:", namaSekolahTujuan);
+    } else {
+      console.warn("⚠️ NISN/ID tidak keciduk di cache, menggunakan nama dari tampilan layar.");
+    }
+  }
+
+  // 3. MULAI PROSES PENULISAN DOKUMEN HTML KE JENDELA POP-UP BARU
+  var pWin = window.open('', '_blank');
+  if (!pWin) {
+    alert("❌ Gagal mencetak: Pop-up diblokir oleh browser! Mohon izinkan pop-up untuk website ini.");
+    return;
+  }
+
+  pWin.document.write('<html><head><title>SK Seleksi & Lampiran Pernyataan - ' + namaSiswa + '</title>');
+  pWin.document.write('<style>');
+  pWin.document.write('body{font-family:"Arial",sans-serif;padding:20px;line-height:1.5;color:#000;}');
+  pWin.document.write('.kop{text-align:center;border-bottom:3px double #000;padding-bottom:10px;margin-bottom:25px;}');
+  pWin.document.write('.kop h2, .kop h3, .kop h4{margin:5px 0;}');
+  pWin.document.write('.status{font-size:20px;font-weight:bold;text-align:center;margin:25px 0;padding:12px;border:2px solid #000;background:#f8f9fa;}');
+  pWin.document.write('.halaman-lampiran{page-break-before:always;margin-top:30px;}'); 
+  pWin.document.write('.fakta-box{border:1px solid #000;padding:20px;margin-top:15px;}');
+  pWin.document.write('.ttd-table{width:100%;margin-top:50px;text-align:center;}');
+  pWin.document.write('.materai{border:1px dashed #666;width:80px;height:55px;line-height:55px;font-size:10px;color:#666;margin:10px auto;font-weight:bold;}');
+  pWin.document.write('</style>');
+  pWin.document.write('</head><body>');
+  
+  // KOP SURAT
+  pWin.document.write('<div class="kop">');
+  pWin.document.write('<h3>PANITIA PENERIMAAN PESERTA DIDIK BARU (PPDB)</h3>');
+  pWin.document.write('<h3>' + namaSekolahTujuan + '</h3>'); 
+  pWin.document.write('<h3>TAHUN PELAJARAN ' + txtTahun + '</h3>');
+  pWin.document.write('</div>');
+  
+  pWin.document.write('<p style="text-align:center;font-weight:bold;text-decoration:underline;margin-bottom:25px;font-size:16px;">SURAT KEPUTUSAN HASIL SELEKSI ONLINE</p>');
+  pWin.document.write('<p>Berdasarkan hasil sidang pleno panitia pendaftaran dan validasi berkas digital, tim verifikasi memutuskan menyatakan bahwa calon siswa di bawah ini:</p>');
+  
+  pWin.document.write('<table style="margin:20px 0 20px 20px; font-size:15px; width:80%;">');
+  pWin.document.write('<tr><td style="width:180px;padding:4px 0;">Nama Lengkap Siswa</td><td>: <strong>' + namaSiswa + '</strong></td></tr>');
+  pWin.document.write('<tr><td style="padding:4px 0;">Nomor NISN</td><td>: ' + (nisnAktif || "-") + '</td></tr>');
+  pWin.document.write('<tr><td style="padding:4px 0;">ID Registrasi Pendaftaran</td><td>: ' + (idPenAktif || "-") + '</td></tr>');
+  pWin.document.write('</table>');
+  
+  pWin.document.write('<div class="status">HASIL SELEKSI: ' + statusSiswa + '</div>');
+  
+  if (statusSiswa === "DITOLAK") {
+    pWin.document.write('<p style="color:red;font-weight:bold;">Catatan Evaluasi Panitia Cabang:</p>');
+    pWin.document.write('<div style="border:1px solid red;padding:15px;background:#fff5f5;color:#c53030;border-radius:5px;">' + alasanPenolakan + '</div>');
+    pWin.document.write('<p style="margin-top:20px;font-size:14px;color:#555;">Catatan: Anda masih memiliki kesempatan untuk mengajukan pendaftaran ke sekolah lain yang kuotanya masih tersedia melalui menu utama akun Anda.</p>');
+  } else {
+    pWin.document.write('<p>Selamat! Anda dinyatakan lulus seleksi administrasi di <strong>' + namaSekolahTujuan + '</strong>. Lembar berikutnya merupakan <strong>dokumen lampiran wajib</strong> yang harus diisi, ditandatangani, dan dibawa ke panitia pendaftaran loket fisik saat jadwal daftar ulang.</p>');
+  }
+  
+  pWin.document.write('<table style="width:100%;margin-top:50px;"><tr><td></td><td style="text-align:right;width:300px;">Bogor, ' + new Date().toLocaleDateString('id-ID',{year:'numeric',month:'long',day:'numeric'}) + '<br>Ketua Panitia PPDB Cabang,</td></tr><tr><td style="height:60px;"></td><td></td></tr><tr><td></td><td style="text-align:right;font-weight:bold;">( Tim Validasi Sistem )</td></tr></table>');
+
+  if (statusSiswa === "DITERIMA") {
+    pWin.document.write('<div class="halaman-lampiran"></div>'); 
+    pWin.document.write('<p style="margin:0;font-size:13px;font-weight:bold;text-align:right;">LAMPIRAN SK KELULUSAN PPDB : ' + (idPenAktif || "-") + '</p>');
+    pWin.document.write('<div style="border-bottom:1px solid #000;margin-bottom:20px;padding-top:5px;"></div>');
+    
+    pWin.document.write('<p style="text-align:center;font-weight:bold;font-size:16px;margin:0 0 5px 0;">FAKTA INTEGRITAS & SURAT PERNYATAAN</p>');
+    pWin.document.write('<p style="text-align:center;font-weight:bold;font-size:14px;margin:0 0 25px 0;">PERTANGGUNGJAWABAN MUTLAK ORANG TUA / WALI PESERTA DIDIK</p>');
+    
+    pWin.document.write('<div class="fakta-box">');
+    pWin.document.write('<p style="margin-top:0;">Saya yang bertandatangan di bawah ini, selaku Orang Tua / Wali sah dari calon peserta didik baru atas nama <strong>' + namaSiswa + '</strong>, menyatakan dengan sesungguhnya bahwa:</p>');
+    pWin.document.write('<ol style="padding-left:20px; text-align:justify; line-height:1.6;">');
+    pWin.document.write('<li style="margin-bottom:10px;">Seluruh data profil pribadi dan dokumen digital (KK, Akta Kelahiran, SKL, KIP) yang diunggah ke dalam sistem pendaftaran mandiri ini adalah <strong>benar, valid, sesuai aslinya</strong>, dan dapat dipertanggungjawabkan secara hukum.</li>');
+    pWin.document.write('<li style="margin-bottom:10px;">Saya tidak memanipulasi atau memalsukan identitas administrasi kelulusan sekolah dalam bentuk apapun.</li>');
+    pWin.document.write('<li style="margin-bottom:10px;">Jika di kemudian hari ditemukan bukti penyimpangan data atau pemalsuan berkas, saya bersedia menerima konsekuensi pembatalan status kelulusan anak saya dan bersedia dikeluarkan dari sekolah demi hukum.</li>');
+    pWin.document.write('<li style="margin-bottom:10px;">Kami menyatakan bersedia membimbing anak kami untuk mematuhi seluruh tata tertib lembaga pendidikan, mengikuti proses belajar dengan baik, serta menuntaskan administrasi sekolah tepat waktu.</li>');
+    pWin.document.write('</ol>');
+    pWin.document.write('<p style="margin-bottom:0;font-size:13px;font-style:italic;color:#333;">Surat pernyataan fakta integritas ini dibuat secara sadar, jujur, serta tanpa intervensi maupun paksaan dari pihak panitia.</p>');
+    pWin.document.write('</div>');
+    
+    pWin.document.write('<table class="ttd-table">');
+    pWin.document.write('<tr><td style="width:33%;">Calon Siswa Baru,</td><td style="width:33%;">Mengetahui,<br>Orang Tua / Wali Murid,</td><td style="width:34%;">Bogor, ........................... 2026<br>Petugas Verifikator Fisik,</td></tr>');
+    pWin.document.write('<tr><td style="height:60px;"></td><td><div class="materai">MATERAI<br>10.000</div></td><td style="height:60px;"></td></tr>');
+    pWin.document.write('<tr><td style="font-weight:bold;text-decoration:underline;">( ' + namaSiswa + ' )</td><td style="font-weight:bold;">( ........................................ )</td><td style="font-weight:bold;">( ........................................ )</td></tr>');
+    pWin.document.write('</table>');
+  }
+
+  pWin.document.write('</body></html>');
+  pWin.document.close();
+  
+  // ✨ OPTIMALISASI PROSES CETAK OTOMATIS (Jauh lebih stabil dibanding setTimeout biasa)
+  pWin.onload = function() {
+    pWin.print();
+  };
+}
+
+
+// =========================================================================
+// 🚀 STUDENT CONTROLLER: EKSEKUSI MUTASI MANDIRI DATA BERKAS (FRONTEND)
+// FIX: Sinkronisasi Tembakan 3 Parameter ke Backend & Auto-Reset State Akun
+// =========================================================================
+function pindahSekolahPilihan() {
+  var cabangBaru = document.getElementById('selSekolahAlternatif').value;
+  if (!cabangBaru) { 
+    alert("Pilih salah satu nama sekolah cabang alternatif."); 
+    return; 
+  }
+  
+  // Pastikan variabel global NISN dan ID Sekolah Asal tersedia
+  var nisnAman = typeof sisNisnLogin !== 'undefined' ? sisNisnLogin : "";
+  var sekolahLamaAman = typeof sisSchId !== 'undefined' ? sisSchId : "";
+
+  if (!nisnAman || !sekolahLamaAman) {
+    alert("❌ Sesi Bermasalah: NISN atau ID Sekolah asal tidak terdeteksi. Silakan muat ulang halaman.");
+    return;
+  }
+
+  if (confirm("Apakah Anda yakin ingin memindahkan seluruh rekam berkas pendaftaran Anda ke cabang baru ini?\n\nSemua dokumen digital (KK, Akta, SKL, KIP) akan otomatis disalin ke database sekolah tujuan baru.")) {
+    
+    // 1. Kunci Tampilan dengan Animasi Loading agar user tidak klik berkali-kali
+    var bBox = document.getElementById('boxStatusDitolak');
+    var backupContent = bBox ? bBox.innerHTML : "";
+    if (bBox) {
+      bBox.innerHTML = "<div class='p-4 text-center text-dark'><div class='spinner-border text-primary me-2' role='status'></div><span class='fw-semibold'>Menghubungkan, menyalin berkas digital, & memindahkan basis data akun...</span></div>";
+    }
+
+    // 2. Jalankan jembatan API google.script.run
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
+      google.script.run
+        .withSuccessHandler(function(res) {
+          if (res && res.status === "success") {
+            // SUNTIKAN NOTIFIKASI SUKSES: Beri info transparan bahwa ID pendaftaran mereka juga diperbarui
+            alert("✓ BERHASIL MUTASI!\n\nAkun pendaftaran dan seluruh dokumen digital Anda resmi dialihkan ke cabang tujuan baru.\n\nID Pendaftaran Baru Anda: " + res.new_id);
+            
+            // A. Update Variabel Global Sekolah Aktif Siswa di RAM Browser
+            sisSchId = cabangBaru; 
+            
+            // B. Jika Anda menyimpan ID Registrasi di variabel global frontend, update juga di sini
+            if (typeof sisIdPendaftar !== 'undefined') {
+              sisIdPendaftar = res.new_id;
+            }
+
+            // C. Reset checkbox persetujuan syarat agar tertib administrasi di sekolah baru
+            var chkSyarat = document.getElementById('chkPersetujuanSyarat');
+            if (chkSyarat) {
+              chkSyarat.checked = false;
+            }
+            
+            // D. Jalankan fungsi pengecekan tombol simpan bawaan Anda
+            if (typeof validasiKunciTombolSimpan === 'function') {
+              validasiKunciTombolSimpan();
+            }
+            
+            // E. Ambil data terbaru dari spreadsheet sekolah baru untuk di-render di dashboard siswa
+            if (typeof muatDataSiswaDatabase === 'function') {
+              muatDataSiswaDatabase();
+            }
+
+          } else {
+            // Jika ditolak oleh backend (misal karena status aslinya bukan "Ditolak")
+            alert("⚠️ Gagal beralih: " + (res.message || "Terjadi kendala saat memindahkan berkas."));
+            if (bBox) bBox.innerHTML = backupContent;
+          }
+        })
+        .withFailureHandler(function(err) {
+          alert("❌ Crash Jaringan: Gagal menghubungi server cloud. " + err.toString());
+          if (bBox) bBox.innerHTML = backupContent;
+        })
+        // 🔥 VALIDASI UTAMA: Kita tembak 3 parameter wajib sesuai urutan fungsi di Code.gs!
+        // Urutan: (nisn, idSekolahLama, idSekolahBaru)
+        .prosesPindahSekolahPilihanSiswa(nisnAman, sekolahLamaAman, cabangBaru);
+        
+    } else {
+      alert("❌ Environment Error: API Google Apps Script tidak termuat sempurna.");
+      if (bBox) bBox.innerHTML = backupContent;
+    }
+  }
+}
+
+
+function prosesSimpanBiodataSiswa(btn) {
   var jkTerpilih = "-";
   var rJk = document.getElementsByName("rb_jk");
-  for (var i = 0; i < rJk.length; i++) {
-    if (rJk[i].checked) { jkTerpilih = rJk[i].value; break; }
-  }
+  for (var i = 0; i < rJk.length; i++) { if (rJk[i].checked) { jkTerpilih = rJk[i].value; break; } }
 
-  // Ambil opsi Radio Button Jenis Pendaftaran secara aman
   var jpTerpilih = "-";
   var rJp = document.getElementsByName("rb_jp");
-  for (var i = 0; i < rJp.length; i++) {
-    if (rJp[i].checked) { jpTerpilih = rJp[i].value; break; }
-  }
+  for (var i = 0; i < rJp.length; i++) { if (rJp[i].checked) { jpTerpilih = rJp[i].value; break; } }
 
-  var tombolAsli = btn.innerHTML;
-  btn.disabled = true;
-  btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Menyimpan...`;
+  var txtAsli = btn.innerHTML; btn.disabled = true; btn.innerHTML = "Menyimpan...";
 
-  // Bungkus seluruh input data form yang diizinkan untuk diubah
   var payload = {
-    kontak: document.getElementById('f_kontak').value.trim(),
-    nik_siswa: document.getElementById('f_nik_siswa').value.trim(),
-    asal_sekolah: document.getElementById('f_asal').value.trim(),
-    tempat_lahir: document.getElementById('f_tempat_lahir').value.trim(),
+    kontak: document.getElementById('formTelepon').value.trim(),
+    nik_siswa: document.getElementById('formNIK').value.trim(),
+    nama: document.getElementById('formNamaSiswa').value.trim().toUpperCase(),
+    asal_sekolah: document.getElementById('f_asal').value.trim().toUpperCase(),
+    tempat_lahir: document.getElementById('f_tempat_lahir').value.trim().toUpperCase(),
     tanggal_lahir: document.getElementById('f_tanggal_lahir').value,
-    alamat: document.getElementById('f_alamat').value.trim(),
-    jenis_kelamin: jkTerpilih,
-    jenis_pendaftaran: jpTerpilih,
-    nama_ayah: document.getElementById('f_nama_ayah').value.trim(),
+    alamat: document.getElementById('f_alamat').value.trim().toUpperCase(),
+    jenis_kelamin: jkTerpilih, jenis_pendaftaran: jpTerpilih,
+    nama_ayah: document.getElementById('f_nama_ayah').value.trim().toUpperCase(),
     nik_ayah: document.getElementById('f_nik_ayah').value.trim(),
-    nama_ibu: document.getElementById('f_nama_ibu').value.trim(),
+    nama_ibu: document.getElementById('f_nama_ibu').value.trim().toUpperCase(),
     nik_ibu: document.getElementById('f_nik_ibu').value.trim(),
     jumlah_saudara: document.getElementById('f_jumlah_saudara').value || "0",
     anak_ke: document.getElementById('f_anak_ke').value || "1",
-    kelas_dimasuki: document.getElementById('f_kelas_dimasuki').value.trim()
+    kelas_dimasuki: document.getElementById('f_kelas_dimasuki').value.trim().toUpperCase()
   };
 
-  // Kirim data modifikasi ke Code.gs backend
   google.script.run
     .withSuccessHandler(function(res) {
-      btn.disabled = false;
-      btn.innerHTML = tombolAsli;
+      btn.disabled = false; btn.innerHTML = txtAsli;
       if (res && res.status === "success") {
-        alert("✅ Berhasil! Biodata Dapodik Anda telah diperbarui di database pusat.");
-        muatDataSiswaDatabase(); // Tarik ulang data segar dari sheet
-      } else {
-        alert("❌ Gagal menyimpan perubahan: " + res.message);
-      }
+        alert("✅ Berhasil! Formulir Dapodik Anda telah diperbarui dalam bentuk kapital murni.");
+        document.getElementById('chkPersetujuanSyarat').checked = false;
+        validasiKunciTombolSimpan();
+        muatDataSiswaDatabase();
+      } else { alert("❌ Gagal: " + res.message); }
     })
-    .withFailureHandler(function(err) {
-      btn.disabled = false;
-      btn.innerHTML = tombolAsli;
-      alert("🚨 Gangguan Jaringan Server: " + err.message);
-    })
+    .withFailureHandler(function(err) { btn.disabled = false; btn.innerHTML = txtAsli; alert("🚨 Error Jaringan."); })
     .updateBiodataSiswaServer(sisSchId, sisIdPendaftar, payload);
 }
 
-/**
- * 3. FUNGSI UNTUK MENGATUR BADGE DAN TOMBOL AKSES BERKAS DOKUMEN
- */
 function perbaruiUIStatusDokumenSiswa(idJenis, urlBerkas) {
   var badgeEl = document.getElementById('badge_' + idJenis);
   var btnContainer = document.getElementById('btn_' + idJenis);
   if (!badgeEl || !btnContainer) return;
 
-  var adaFile = (urlBerkas && urlBerkas !== "" && urlBerkas !== "-");
-
-  if (adaFile) {
+  if (urlBerkas && urlBerkas !== "" && urlBerkas !== "-") {
     badgeEl.className = "badge text-xs mt-1 bg-success-subtle text-success border border-success-subtle";
     badgeEl.innerText = "Sudah Unggah";
-    
     btnContainer.innerHTML = `
-      <a href="${urlBerkas}" target="_blank" class="btn btn-outline-primary btn-xs rounded-pill px-2 py-0" title="Lihat Berkas"><i class="bi bi-eye"></i></a>
-      <button type="button" class="btn btn-dark btn-xs rounded-pill px-2 py-0" onclick="document.getElementById('file_upload_${idJenis}').click()" title="Ganti Berkas"><i class="bi bi-upload"></i></button>
-    `;
+      <a href="${urlBerkas}" target="_blank" class="btn btn-outline-primary btn-xs rounded-pill px-2 py-0"><i class="bi bi-eye"></i></a>
+      <button type="button" class="btn btn-dark btn-xs rounded-pill px-2 py-0" onclick="document.getElementById('file_upload_${idJenis}').click()"><i class="bi bi-upload"></i></button>`;
   } else {
     badgeEl.className = "badge text-xs mt-1 bg-danger-subtle text-danger border border-danger-subtle";
     badgeEl.innerText = "Belum Ada";
-    
-    btnContainer.innerHTML = `
-      <button type="button" class="btn btn-primary btn-xs rounded-pill px-3 py-0 fw-semibold" onclick="document.getElementById('file_upload_${idJenis}').click()"><i class="bi bi-upload me-1"></i>Unggah</button>
-    `;
+    btnContainer.innerHTML = `<button type="button" class="btn btn-primary btn-xs rounded-pill px-3 py-0 fw-semibold" onclick="document.getElementById('file_upload_${idJenis}').click()"><i class="bi bi-upload me-1"></i>Unggah</button>`;
   }
 }
 
-/**
- * 4. FUNGSI UNTUK PROSES UNGGHAH BERKAS DOKUMEN (KK, AKTA, SKL, KIP)
- */
 function uploadDokumenSiswa(input, jenisDokumen) {
-  var file = input.files[0];
-  if (!file) return;
-
-  // Batasan ukuran berkas maksimal 2MB
-  if (file.size > 2 * 1024 * 1024) {
-    alert("❌ Batas Ukuran File: Maksimal dokumen sebesar 2MB.");
-    input.value = "";
-    return;
-  }
+  var file = input.files[0]; if (!file) return;
+  if (file.size > 2 * 1024 * 1024) { alert("❌ Maksimal file sebesar 2MB."); input.value = ""; return; }
 
   var reader = new FileReader();
   reader.onload = function(e) {
-    if (typeof sisSchId === 'undefined' || typeof sisIdPendaftar === 'undefined' || !sisSchId || !sisIdPendaftar) {
-      alert("❌ Sesi Gagal: Parameter ID Instansi atau ID Siswa tidak ditemukan.");
-      return;
-    }
-
-    // Ubah tampilan UI badge menjadi animasi spinner loading
     var badgeEl = document.getElementById('badge_' + jenisDokumen);
-    var btnContainer = document.getElementById('btn_' + jenisDokumen);
     if (badgeEl) {
       badgeEl.className = "badge text-xs mt-1 bg-warning-subtle text-warning border border-warning-subtle";
-      badgeEl.innerHTML = `<span class="spinner-border spinner-border-xs me-1" role="status" aria-hidden="true"></span>Mengunggah...`;
+      badgeEl.innerHTML = `<span class="spinner-border spinner-border-xs me-1"></span>Mengunggah...`;
     }
-    if (btnContainer) {
-      btnContainer.innerHTML = `<button disabled class="btn btn-outline-secondary btn-xs rounded-pill px-2 py-0 opacity-50"><i class="bi bi-hourglass-split"></i></button>`;
-    }
-
-    // Ambil nama file asli dari input komputer/HP siswa
-    var namaFileAsli = file.name;
-
-    // SINKRONISASI TOTAL PARAMETER KE SERVER (Code.gs):
-    // Urutan fungsi di Code.gs: uploadBerkasSiswa(idSekolah, idPendaftar, fileName, base64Data, tipeBerkas)
     google.script.run
       .withSuccessHandler(function(res) {
-        input.value = ""; // Bersihkan komponen input file DOM
-        if (res && res.status === "success") {
-          alert("✅ Sukses! Dokumen " + jenisDokumen + " Anda berhasil diperbarui.");
-          muatDataSiswaDatabase(); // Tarik ulang data segar untuk memperbarui tombol dan badge di layar
-        } else {
-          alert("❌ Gagal unggah dokumen: " + (res.message || "Eror tidak diketahui"));
-          muatDataSiswaDatabase(); 
-        }
-      })
-      .withFailureHandler(function(err) {
         input.value = "";
-        alert("🚨 Gangguan Jaringan Cloud: " + err.message);
-        muatDataSiswaDatabase(); 
+        if (res && res.status === "success") { alert("✅ Dokumen " + jenisDokumen + " sukses diperbarui."); }
+        muatDataSiswaDatabase();
       })
-      .uploadBerkasSiswa(sisSchId, sisIdPendaftar, namaFileAsli, e.target.result, jenisDokumen);
+      .prosesUploadDokumenServer(sisSchId, sisIdPendaftar, jenisDokumen, e.target.result);
   };
-  
   reader.readAsDataURL(file);
 }
 
-/**
- * 5. FUNGSI TOMBOL SEGARKAN DATA FRONTEND
- */
-function segarkanBerkasSiswa(btn) {
-  var tombolAsli = "";
-  if (btn) {
-    tombolAsli = btn.innerHTML;
-    btn.disabled = true;
-    btn.innerHTML = `
-      <span class="spinner-border spinner-border-sm text-primary me-2" role="status" aria-hidden="true"></span>
-      <span class="text-dark fw-semibold">Menyegarkan...</span>
-    `;
-  }
-
-  try {
-    muatDataSiswaDatabase();
-    setTimeout(function() {
-      if (btn) {
-        btn.disabled = false;
-        btn.innerHTML = tombolAsli;
-      }
-    }, 2000);
-  } catch (err) {
-    console.error(err);
-    if (btn) {
-      btn.disabled = false;
-      btn.innerHTML = tombolAsli;
-    }
-  }
-}
-
-/**
- * 6. FUNGSI UPLOAD PASFOTO PROFIL KE CLOUD DRIVE
- */
 function uploadFotoProfil(input) {
   var file = input.files[0];
   if (!file) return;
 
+  // 1. Validasi Ukuran File (Maksimal 2MB)
   if (file.size > 2 * 1024 * 1024) {
     alert("❌ Batas Ukuran File: Maksimal foto profil sebesar 2MB.");
     input.value = "";
@@ -615,6 +1187,7 @@ function uploadFotoProfil(input) {
 
   var reader = new FileReader();
   reader.onload = function(e) {
+    // 2. Validasi Ketersediaan Variabel Sesi
     if (typeof sisSchId === 'undefined' || typeof sisIdPendaftar === 'undefined') {
       alert("❌ Sesi Gagal: Parameter ID Instansi atau ID Siswa tidak ditemukan.");
       return;
@@ -622,26 +1195,91 @@ function uploadFotoProfil(input) {
 
     var iconProfil = document.getElementById('iconFotoProfil');
     var imgProfil = document.getElementById('imgFotoProfil');
+    
+    // 3. MULAI ANIMASI LOADING
     if (imgProfil) imgProfil.classList.add('d-none');
-    if (iconProfil) iconProfil.className = "spinner-border text-primary display-4";
+    if (iconProfil) {
+      iconProfil.className = "spinner-border text-primary";
+      iconProfil.style.width = "3rem";
+      iconProfil.style.height = "3rem";
+      iconProfil.innerText = "";
+      iconProfil.classList.remove('d-none');
+    }
 
+    input.disabled = true;
+
+    // 4. KIRIM DATA KE SERVER
     google.script.run
       .withSuccessHandler(function(res) {
+        input.disabled = false;
+        input.value = ""; 
+
         if (res && res.status === "success") {
           alert("✅ Sukses! Foto profil Anda berhasil diperbarui.");
+          
+          // =====================================================================
+          // DI SINI TEMPATNYA: PROSES REFRESH OTOMATIS INSTAN SETELAH UPLOAD SUKSES
+          // =====================================================================
+          if (res.link && res.link.includes("drive.google.com")) {
+            var fileId = "";
+            if (res.link.includes("/d/")) {
+              fileId = res.link.split("/d/")[1].split("/")[0];
+            } else if (res.link.includes("id=")) {
+              fileId = res.link.split("id=")[1].split("&")[0];
+            }
+            
+            if (fileId !== "") {
+              // Mengubah url Drive menjadi direct link gambar
+              var directImageUrl = "https://lh3.googleusercontent.com/u/0/d/" + fileId;
+              
+              if (imgProfil) {
+                // KODE ANDA DI SINI: Memaksa browser bypass cache menggunakan timestamp (?t=)
+                imgProfil.src = directImageUrl + "?t=" + new Date().getTime();
+                imgProfil.classList.remove('d-none');
+              }
+              if (iconProfil) iconProfil.classList.add('d-none');
+            }
+          }
+          // =====================================================================
+          
+          // Tetap panggil ini untuk memperbarui memori cache sistem di background
           muatDataSiswaDatabase(); 
+
         } else {
-          alert("❌ Gagal unggah foto: " + res.message);
-          muatDataSiswaDatabase(); 
+          alert("❌ Gagal unggah foto: " + (res.message || "Terjadi kesalahan sistem."));
+          hentikanLoadingFotoSiswa(imgProfil, iconProfil);
         }
       })
       .withFailureHandler(function(err) {
+        input.disabled = false;
+        input.value = "";
         alert("🚨 Gangguan Jaringan: " + err.message);
-        muatDataSiswaDatabase(); 
+        hentikanLoadingFotoSiswa(imgProfil, iconProfil);
       })
       .prosesUploadFotoProfilServer(sisSchId, sisIdPendaftar, e.target.result);
   };
   
   reader.readAsDataURL(file);
+}
+
+// Fungsi pembantu jika upload gagal agar spinner kembali jadi icon siluet
+function hentikanLoadingFotoSiswa(img, icon) {
+  if (img && img.src && img.src !== "") {
+    img.classList.remove('d-none');
+    if (icon) icon.classList.add('d-none');
+  } else {
+    if (img) img.classList.add('d-none');
+    if (icon) {
+      icon.className = "bi bi-person-circle text-secondary display-4";
+      icon.style.width = "";
+      icon.style.height = "";
+    }
+  }
+}
+
+function segarkanBerkasSiswa(btn) {
+  var txt = btn.innerHTML; btn.disabled = true; btn.innerHTML = "<span class='spinner-border spinner-border-sm text-primary me-2'></span>...";
+  muatDataSiswaDatabase();
+  setTimeout(function() { btn.disabled = false; btn.innerHTML = txt; }, 1500);
 }
 </script>
